@@ -1,7 +1,7 @@
 [
     {
         "name": "Passive Voice",
-        "pattern": "\\b(am|are|is|was|were|be|being|been)\\s+[a-z]+ed\\b",
+        "pattern": "\\b(am|are|is|was|were|be|being|been)\\s+[a-z]+(?:ed|[^a-z]\\w+)\\b",
         "explanation": "Passive voice can make your writing less direct. Consider rewriting in active voice.",
         "example": "Change 'The report was written by John' to 'John wrote the report'"
     },
@@ -13,9 +13,9 @@
     },
     {
         "name": "Article Agreement",
-        "pattern": "\\b(a|an)\\s+[aeiou][a-z]+\\b",
-        "explanation": "Incorrect article usage before vowel sounds.",
-        "example": "Change 'a apple' to 'an apple'"
+        "pattern": "\\b(a\\s+[aeiou]\\w+|an\\s+[bcdfghjklmnpqrstvwxyz]\\w+)\\b",
+        "explanation": "Incorrect article usage before vowel sounds. Use 'an' before vowel sounds and 'a' before consonant sounds.",
+        "example": "Change 'a apple' to 'an apple' or 'an book' to 'a book'"
     },
     {
         "name": "Common Confusion: Their/There/They're",
@@ -23,24 +23,23 @@
         "explanation": "These words are often confused. 'Their' shows possession, 'there' indicates location, and 'they're' is a contraction of 'they are'.",
         "example": "Make sure you're using the correct form: 'Their house', 'over there', 'they're happy'"
     },
-
     {
         "name": "Missing Period",
-        "pattern": "[a-z][^.!?]\\s+[A-Z]",
+        "pattern": "([a-z][^.!?])\\s+([A-Z])",
         "explanation": "Sentences should end with proper punctuation.",
         "example": "Change 'She left the room She was tired' to 'She left the room. She was tired'",
         "replacement": "$1. $2"
     },
     {
         "name": "Capitalization Error",
-        "pattern": "\\b(i|i'm|i'll|i'd|i've)\\b",
+        "pattern": "\\b(i)(['a-z]*)\\b",
         "explanation": "The pronoun 'I' should always be capitalized.",
-        "example": "Change 'i went to the store' to 'I went to the store'",
+        "example": "Change 'i went to the store' or 'i'm happy' to 'I went to the store' or 'I'm happy'",
         "replacement": "I$2"
     },
     {
         "name": "Oxford Comma",
-        "pattern": "\\b([a-z]+,\\s[a-z]+)\\s(and|or)\\s([a-z]+)\\b",
+        "pattern": "\\b([a-z]+(?:,\\s[a-z]+)+)\\s(and|or)\\s([a-z]+)\\b",
         "explanation": "Consider using the Oxford comma for clarity in lists.",
         "example": "Change 'apples, oranges and bananas' to 'apples, oranges, and bananas'",
         "replacement": "$1, $2 $3"
@@ -54,16 +53,28 @@
     },
     {
         "name": "Apostrophe in Contractions",
-        "pattern": "\\b(dont|wont|cant|isnt|arent)\\b",
+        "pattern": "\\b(dont|wont|cant|isnt|arent|didnt|hasnt|havent)\\b",
         "explanation": "Contractions require apostrophes.",
-        "example": "Change 'dont' to 'don't'",
-        "replacement": "$1'$2"
+        "example": "Change 'dont' to 'don't', 'wont' to 'won't'",
+        "replacement": "$1t"
     },
     {
         "name": "Sentence Capitalization",
-        "pattern": "(?:[.!?]\\s+)([a-z])",
+        "pattern": "([.!?]\\s+)([a-z])",
         "explanation": "The first letter after a sentence-ending punctuation should be capitalized.",
         "example": "Change 'the end. next sentence' to 'the end. Next sentence'",
-        "replacement": "$1${$2.toUpperCase()}"
+        "replacement": "$1\u$2"
+    },
+    {
+        "name": "Common Confusion: Your/You're",
+        "pattern": "\\b(your|you're)\\b",
+        "explanation": "These words are often confused. 'Your' shows possession, while 'you're' is a contraction of 'you are'.",
+        "example": "Make sure you're using the correct form: 'Your book', 'you're welcome'"
+    },
+    {
+        "name": "Its/It's Confusion",
+        "pattern": "\\b(its|it's)\\b",
+        "explanation": "These words are often confused. 'Its' shows possession, while 'it's' is a contraction of 'it is' or 'it has'.",
+        "example": "Make sure you're using the correct form: 'The dog wagged its tail', 'it's raining'"
     }
 ]
