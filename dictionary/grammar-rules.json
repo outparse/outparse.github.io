@@ -1,1 +1,26 @@
-
+[
+    {
+        "name": "Passive Voice",
+        "pattern": "\\b(am|are|is|was|were|be|being|been)\\s+[a-z]+ed\\b",
+        "explanation": "Passive voice can make your writing less direct. Consider rewriting in active voice.",
+        "example": "Change 'The report was written by John' to 'John wrote the report'"
+    },
+    {
+        "name": "Double Negative",
+        "pattern": "\\b(?:[a-z]+n't|not)\\s+.*\\b(?:[a-z]+n't|not)\\b",
+        "explanation": "Double negatives can be confusing. Use a single negative for clarity.",
+        "example": "Change 'I don't have no time' to 'I don't have any time'"
+    },
+    {
+        "name": "Article Agreement",
+        "pattern": "\\b(a|an)\\s+[aeiou][a-z]+\\b",
+        "explanation": "Incorrect article usage before vowel sounds.",
+        "example": "Change 'a apple' to 'an apple'"
+    },
+    {
+        "name": "Common Confusion: Their/There/They're",
+        "pattern": "\\b(their|there|they're)\\b",
+        "explanation": "These words are often confused. 'Their' shows possession, 'there' indicates location, and 'they're' is a contraction of 'they are'.",
+        "example": "Make sure you're using the correct form: 'Their house', 'over there', 'they're happy'"
+    }
+]
