@@ -1,0 +1,25 @@
+{
+    "spelling": {
+        "suggestions": [
+            {
+                "error": "recieve",
+                "correction": "receive",
+                "explanation": "Remember the rule: 'i before e except after c'"
+            },
+            {
+                "error": "definately",
+                "correction": "definitely",
+                "explanation": "Think of the word 'finite' within 'definitely'"
+            }
+        ]
+    },
+    "grammar": {
+        "commonErrors": [
+            {
+                "pattern": "there [\\w]+ are",
+                "correction": "there is",
+                "explanation": "Use 'there is' for singular nouns and 'there are' for plural nouns"
+            }
+        ]
+    }
+}
