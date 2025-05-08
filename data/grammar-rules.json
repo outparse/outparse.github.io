@@ -1,0 +1,22 @@
+{
+    "subjectVerbAgreement": {
+        "description": "Subject and verb must agree in number",
+        "rules": [
+            {
+                "pattern": "(?<subject>\\w+)\\s+(?<verb>\\w+)",
+                "check": "subject.number == verb.number",
+                "message": "The subject and verb don't agree in number"
+            }
+        ]
+    },
+    "tenseConsistency": {
+        "description": "Maintain consistent tense throughout",
+        "rules": [
+            {
+                "pattern": "(?<firstVerb>\\w+).*?(?<secondVerb>\\w+)",
+                "check": "firstVerb.tense == secondVerb.tense",
+                "message": "Inconsistent verb tense detected"
+            }
+        ]
+    }
+}
