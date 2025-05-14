@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outparse</title>
+<link rel="license" href="https://www.gnu.org/licenses/agpl-3.0.html">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+--color-primary: #333;
+--color-secondary: #666;
+--color-light: #f5f5f5;
+--color-lighter: #f9f9f9;
+--color-white: #fff;
+--color-gray: #ccc;
+--color-dark-gray: #e0e0e0;
+--shadow-sm: 2px 2px 0 rgba(0, 0, 0, 0.1);
+--shadow-md: 4px 4px 0 rgba(0, 0, 0, 0.15);
+--radius-sm: 4px;
+--radius-md: 8px;
+--transition: all 0.2s ease-in-out;
+--max-width: 1200px;
+}
+
+html {
+scroll-behavior: smooth;
+}
+
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+display: flex;
+flex-direction: column;
+min-height: 100vh;
+background-color: var(--color-white);
+color: var(--color-primary);
+font-family: 'Noto Sans', sans-serif;
+line-height: 1.6;
+transition: var(--transition);
+max-width: 1440px;
+width: 100%;
+margin: 0 auto;
+}
+
+main {
+flex: 1;
+margin: 3rem 0;
+}
+
+header {
+padding: 1rem;
+text-align: center;
+background: transparent;
+}
+
+.logo {
+max-width: 150px;
+height: auto;
+}
+
+.nav-buttons {
+display: flex;
+justify-content: center;
+gap: 1rem;
+flex-wrap: wrap;
+margin-top: 1rem;
+}
+
+.nav-button {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 0.5rem;
+cursor: pointer;
+width: 80px;
+transition: var(--transition);
+}
+
+.nav-button:hover {
+transform: translateY(-2px);
+}
+
+.hero {
+background: var(--color-lighter);
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 3rem 2rem;
+margin: 0 auto;
+max-width: var(--max-width);
+width: 100%;
+}
+
+.greeting-container {
+display: flex;
+align-items: center;
+gap: 1rem;
+margin-bottom: 1rem;
+}
+
+.greeting-icon svg {
+width: 32px;
+height: 32px;
+}
+
+.greeting-text h2 {
+font-size: 1.75rem;
+margin-bottom: 0.5rem;
+font-weight: 500;
+}
+
+.display-name {
+border-bottom: 2px dotted var(--color-primary);
+padding-bottom: 0.25rem;
+font-weight: 600;
+}
+
+.mind-booster {
+font-size: 1.1rem;
+font-style: italic;
+color: var(--color-secondary);
+margin-top: 1rem;
+}
+
+.documents-container {
+max-width: var(--max-width);
+background-color: var(--color-light);
+margin: 0 auto;
+padding: 4rem 2rem;
+width: 100%;
+}
+
+.documents-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+gap: 3rem;
+margin-bottom: 3rem;
+}
+
+.doc-card, .create-doc {
+background: var(--color-white);
+border-radius: var(--radius-sm);
+padding: 1.5rem;
+margin-top: 1rem;
+cursor: pointer;
+transition: var(--transition);
+text-align: center;
+}
+
+.doc-card {
+  box-shadow: var(--shadow-sm);
+}
+
+.create-doc {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap: 1rem;
+position: relative;
+overflow: hidden;
+border: none;
+background-image: 
+repeating-linear-gradient(to right, var(--color-gray), var(--color-gray) 15px, transparent 15px, transparent 30px),
+repeating-linear-gradient(to bottom, var(--color-gray), var(--color-gray) 15px, transparent 15px, transparent 30px),
+repeating-linear-gradient(to left, var(--color-gray), var(--color-gray) 15px, transparent 15px, transparent 30px),
+repeating-linear-gradient(to top, var(--color-gray), var(--color-gray) 15px, transparent 15px, transparent 30px);
+background-size: 100% 2px, 2px 100%, 100% 2px, 2px 100%;
+background-position: top left, top right, bottom right, bottom left;
+background-repeat: no-repeat;
+}
+
+.create-doc svg {
+width: 48px;
+height: 48px;
+color: var(--color-primary);
+}
+
+.doc-card:hover, .create-doc:hover {
+transform: translateY(-5px);
+box-shadow: var(--shadow-md);
+}
+
+.doc-name {
+font-weight: 700;
+margin: 1rem 0;
+padding-bottom: 0.5rem;
+border-bottom: 2px dashed var(--color-gray);
+}
+
+.doc-date {
+font-size: 0.9rem;
+color: var(--color-secondary);
+margin-bottom: 1rem;
+}
+
+.doc-actions {
+position: relative;
+}
+
+.action-button {
+background: none;
+border: none;
+border-radius: var(--radius-sm);
+cursor: pointer;
+padding: 0.5rem;
+transition: var(--transition);
+}
+
+.action-button:hover {
+background: var(--color-light);
+}
+
+.action-button svg {
+  width: 16px;
+  height: 16px;
+  color: black;
+}
+
+.action-menu {
+position: absolute;
+bottom: 100%;
+left: 50%;
+transform: translateX(-50%);
+background: var(--color-white);
+box-shadow: var(--shadow-md);
+padding: 0.5rem;
+z-index: 10;
+display: none;
+width: 120px;
+}
+
+.action-menu button {
+display: block;
+width: 100%;
+padding: 0.5rem;
+text-align: left;
+background: none;
+border: none;
+cursor: pointer;
+transition: var(--transition);
+border-radius: var(--radius-sm);
+}
+
+.action-menu button:hover {
+background: var(--color-light);
+}
+
+.pagination {
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 1rem;
+margin: 2rem 0;
+}
+
+.pagination-button {
+background: none;
+border: none;
+cursor: pointer;
+padding: 0.5rem;
+transition: var(--transition);
+}
+
+.pagination-button:disabled {
+opacity: 0.5;
+cursor: not-allowed;
+}
+
+.pagination-button:not(:disabled):hover {
+transform: scale(1.1);
+}
+
+.page-number {
+padding: 0.5rem 1rem;
+border: 1px dashed var(--color-secondary);
+border-radius: var(--radius-sm);
+min-width: 40px;
+text-align: center;
+}
+
+.modal {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: rgba(0,0,0,0.5);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 100;
+display: none;
+}
+
+.modal-content {
+background: var(--color-white);
+padding: 2rem;
+border-radius: var(--radius-md);
+max-width: 500px;
+width: 90%;
+box-shadow: var(--shadow-md);
+}
+
+.modal-buttons {
+display: flex;
+justify-content: flex-end;
+gap: 1rem;
+margin-top: 1.5rem;
+}
+
+.modal-buttons button {
+padding: 0.5rem 1rem;
+border: none;
+border-radius: var(--radius-sm);
+cursor: pointer;
+transition: var(--transition);
+}
+
+.confirm-btn {
+background: var(--color-primary);
+color: var(--color-white);
+}
+
+.confirm-btn:hover {
+opacity: 0.9;
+}
+
+.cancel-btn {
+background: var(--color-light);
+}
+
+.cancel-btn:hover {
+background: var(--color-dark-gray);
+}
+
+footer {
+width: 100%;
+background: transparent;
+padding: 3rem 2rem;
+text-align: center;
+margin-top: auto;
+}
+
+.footer-nav {
+display: flex;
+justify-content: center;
+gap: 2rem;
+margin-bottom: 1.5rem;
+flex-wrap: wrap;
+}
+
+.footer-nav a {
+text-decoration: none;
+color: var(--color-primary);
+transition: var(--transition);
+}
+
+.footer-nav a:hover {
+color: var(--color-secondary);
+}
+
+.social-icons {
+display: flex;
+justify-content: center;
+gap: 1.5rem;
+margin-bottom: 1.5rem;
+}
+
+.social-icons a {
+display: inline-block;
+transition: var(--transition);
+}
+
+.social-icons a:hover {
+transform: translateY(-2px);
+}
+
+.social-icons svg {
+width: 24px;
+height: 24px;
+color: var(--color-primary);
+}
+
+.copyright {
+font-size: 0.9rem;
+color: var(--color-secondary);
+}
+
+.copyright a {
+text-decoration: none;
+color: var(--color-primary);
+border-bottom: 1px dotted var(--color-primary);
+transition: var(--transition);
+}
+
+.copyright a:hover {
+border-bottom-color: transparent;
+}
+
+@media (max-width: 767px) {
+.modal {
+align-items: flex-end;
+}
+
+.modal-content {
+width: 100%;
+}
+
+.greeting-text h2 {
+font-size: 1.5rem;
+}
+
+.documents-grid {
+grid-template-columns: 1fr;
+}
+
+.create-doc svg {
+width: 30px;
+height: 30px;
+}
+}
+</style>
+</head>
+<body>
+<header>
+<a href="/"><img src="/assets/images/outparse-mono.svg" alt="Outparse Logo" class="logo"></a>
+<div class="nav-buttons">
+<div class="nav-button">
+<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <!-- First row thumbnail -->
+  <rect x="1" y="2" width="6" height="6" rx="1" fill="#000"/>
+  <!-- First row text lines -->
+  <rect x="8" y="2.2" width="12" height="1.5" rx="0.75" fill="#000"/>
+  <rect x="8" y="4.5" width="9" height="1.5" rx="0.75" fill="#000"/>
+
+  <!-- Second row thumbnail -->
+  <rect x="1" y="12" width="6" height="6" rx="1" fill="#000"/>
+  <!-- Second row text lines -->
+  <rect x="8" y="12.2" width="12" height="1.5" rx="0.75" fill="#000"/>
+  <rect x="8" y="14.5" width="8" height="1.5" rx="0.75" fill="#000"/>
+</svg>
+<span>Docs</span>
+</div>
+<div class="nav-button">
+<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <!-- First list item -->
+  <rect x="2" y="3" width="10" height="2" rx="1" fill="#000"/>
+  <rect x="2" y="6" width="8" height="2" rx="1" fill="#000"/>
+
+  <!-- Second list item -->
+  <rect x="2" y="12" width="10" height="2" rx="1" fill="#000"/>
+  <rect x="2" y="15" width="8" height="2" rx="1" fill="#000"/>
+
+  <!-- Thick download arrow -->
+  <line x1="18" y1="4" x2="18" y2="16" stroke="#000" stroke-width="2.5" stroke-linecap="round"/>
+  <polyline points="14,12 18,16 22,12" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+<span>Downloads</span>
+</div>
+<div class="nav-button">
+<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <!-- First gear-like thumbnail -->
+  <circle cx="4" cy="4" r="2.5" fill="#000"/>
+  <rect x="3.75" y="0.5" width="0.5" height="1.5" fill="#000"/>
+  <rect x="3.75" y="6" width="0.5" height="1.5" fill="#000"/>
+  <rect x="1.5" y="3.25" width="1.5" height="0.5" fill="#000"/>
+  <rect x="6" y="3.25" width="1.5" height="0.5" fill="#000"/>
+
+  <!-- First row text lines -->
+  <rect x="9" y="2.5" width="12" height="1.5" rx="0.75" fill="#000"/>
+  <rect x="9" y="4.8" width="9" height="1.5" rx="0.75" fill="#000"/>
+
+  <!-- Second gear-like thumbnail -->
+  <circle cx="4" cy="16" r="2.5" fill="#000"/>
+  <rect x="3.75" y="12.5" width="0.5" height="1.5" fill="#000"/>
+  <rect x="3.75" y="18" width="0.5" height="1.5" fill="#000"/>
+  <rect x="1.5" y="15.25" width="1.5" height="0.5" fill="#000"/>
+  <rect x="6" y="15.25" width="1.5" height="0.5" fill="#000"/>
+
+  <!-- Second row text lines -->
+  <rect x="9" y="14.5" width="12" height="1.5" rx="0.75" fill="#000"/>
+  <rect x="9" y="16.8" width="8" height="1.5" rx="0.75" fill="#000"/>
+</svg>
+
+<span>Settings</span>
+</div>
+</div>
+</header>
+
+<main>
+<section class="hero">
+<div class="greeting-container">
+<div class="greeting-icon" id="time-icon">
+<!-- Icon will be inserted here by JS -->
+</div>
+<div class="greeting-text">
+<h2><span id="greeting-text">Good Morning</span>, <span class="display-name" id="display-name">Curious Cat</span></h2>
+</div>
+</div>
+<p class="mind-booster"><strong>Your daily booster</strong>: <span id="mind-booster">Perfection is an infinite journey, just start.</span></p>
+</section>
+
+<section class="documents-container">
+<div class="documents-grid" id="documents-grid">
+<div class="create-doc" id="create-doc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2">
+  <rect x="3" y="3" width="22" height="22" rx="4" ry="4"/>
+  <line x1="14" y1="8" x2="14" y2="20"/>
+  <line x1="8" y1="14" x2="20" y2="14"/>
+</svg>
+
+<span>Check new text</span>
+</div>
+<div class="doc-card">
+<div class="doc-date">Created: 10-05-2025</div>
+<div class="doc-name">Outparse Demo</div>
+<div class="doc-date">Last Edited: 10-05-2025</div>
+<div class="doc-actions">
+<button class="action-button" onclick="toggleActionMenu(this)">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+<path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+</svg>
+</button>
+<div class="action-menu">
+<button onclick="editDocument('Outparse Demo')">Edit</button>
+<button onclick="showRenameModal('Outparse Demo')">Rename</button>
+<button onclick="showDeleteModal('Outparse Demo')">Delete</button>
+<button onclick="downloadDocument('Outparse Demo')">Download</button>
+</div>
+</div>
+</div>
+</div>
+
+<div class="pagination">
+<button class="pagination-button" id="prev-page" disabled>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+<path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/>
+</svg>
+</button>
+<span class="page-number" id="current-page" contenteditable="true">1</span>
+<span>/</span>
+<span id="total-pages">1</span>
+<button class="pagination-button" id="next-page" disabled>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+<path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+</svg>
+</button>
+</div>
+</section>
+</main>
+
+<div class="modal" id="rename-modal">
+<div class="modal-content">
+<h3>Rename Document</h3>
+<input type="text" id="rename-input" class="doc-name" value="">
+<div class="modal-buttons">
+<button class="cancel-btn" onclick="hideModal('rename-modal')">Cancel</button>
+<button class="confirm-btn" onclick="renameDocument()">Rename</button>
+</div>
+</div>
+</div>
+
+<div class="modal" id="delete-modal">
+<div class="modal-content">
+<h3>Delete Document</h3>
+<p>Are you sure you want to delete "<span id="doc-to-delete"></span>"?</p>
+<div class="modal-buttons">
+<button class="cancel-btn" onclick="hideModal('delete-modal')">Cancel</button>
+<button class="confirm-btn" onclick="deleteDocument()">Delete</button>
+</div>
+</div>
+</div>
+
+<div class="modal" id="page-modal">
+<div class="modal-content">
+<h3>Page Not Found</h3>
+<p>The page you requested does not exist.</p>
+<div class="modal-buttons">
+<button class="confirm-btn" onclick="hideModal('page-modal')">OK</button>
+</div>
+</div>
+</div>
+
+<footer>
+<div class="footer-nav">
+<a href="#">Updates</a>
+<a href="#">About</a>
+<a href="#">Disclaimer</a>
+</div>
+<div class="social-icons">
+<a href="#" aria-label="GitHub">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+<path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+</svg>
+</a>
+<a href="#" aria-label="LinkedIn">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+<path d="M19 3a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14m-.5 15.5v-5.3a3.26 3.26 0 00-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 011.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 001.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 00-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+</svg>
+</a>
+<a href="#" aria-label="Twitter">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+<path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 01-1.93.07 4.28 4.28 0 004 2.98 8.521 8.521 0 01-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
+</svg>
+</a>
+<a href="#" aria-label="Instagram">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+<path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 01-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 017.8 2m-.2 2A3.6 3.6 0 004 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 003.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 011.25 1.25A1.25 1.25 0 0117.25 8A1.25 1.25 0 0116 6.75a1.25 1.25 0 011.25-1.25M12 7a5 5 0 015 5 5 5 0 01-5 5 5 5 0 01-5-5 5 5 0 015-5m0 2a3 3 0 00-3 3 3 3 0 003 3 3 3 0 003-3 3 3 0 00-3-3z"/>
+</svg>
+</a>
+<a href="#" aria-label="Facebook">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+<path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/>
+</svg>
+</a>
+</div>
+<div class="copyright">
+&copy; 2025 Outparse. Created by <a href="https://itsgbemi.github.io" target="_blank">Gbemisola Oyeniyi</a>. This open source project is licensed under the <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank">GNU Affero General Public License v3.0</a>. All Rights Reserved.
+</div>
+</footer>
+
+<script>
+// Quotes data
+const quotes = [
+"Perfection is an infinite journey, just start.",
+"Small steps every day lead to big results over time.",
+"The expert in anything was once a beginner.",
+"Done is better than perfect.",
+"Progress, not perfection, is the goal.",
+"Consistency is the key to mastery.",
+"Every masterpiece started as a draft.",
+"You don't have to be great to start, but you have to start to be great.",
+"The only way to do great work is to love what you do.",
+"Quality is not an act, it's a habit."
+];
+
+// Time-based greeting
+function updateGreeting() {
+const now = new Date();
+const hours = now.getHours();
+let greeting, icon;
+
+if (hours >= 5 && hours < 12) {
+greeting = "Wake and shine";
+icon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg>`;
+} else if (hours >= 12 && hours < 17) {
+greeting = "Sun’s still high";
+icon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>`;
+} else if (hours >= 17 && hours < 21) {
+greeting = "Evening greetings";
+icon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>`;
+} else {
+greeting = "Shut-eye time";
+icon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12.34 2.02C6.59 1.82 2 6.42 2 12c0 5.52 4.48 10 10 10 3.71 0 6.93-2.02 8.66-5.02-7.51-.25-12.09-8.43-8.32-14.96z"/></svg>`;
+}
+
+document.getElementById('greeting-text').textContent = greeting;
+document.getElementById('time-icon').innerHTML = icon;
+
+// Random quote
+const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+document.getElementById('mind-booster').textContent = randomQuote;
+}
+
+// Document management
+let documents = [];
+let currentPage = 1;
+const docsPerPage = 9; // +1 for create doc box = 10
+
+function loadDocuments() {
+const savedDocs = localStorage.getItem('outparse-documents');
+if (savedDocs) {
+documents = JSON.parse(savedDocs);
+} else {
+// Demo document
+documents = [
+{ id: 'demo', name: 'Outparse Demo', created: '10-05-2025', lastEdited: '10-05-2025' }
+];
+saveDocuments();
+}
+renderDocuments();
+}
+
+function saveDocuments() {
+localStorage.setItem('outparse-documents', JSON.stringify(documents));
+}
+
+function renderDocuments() {
+const grid = document.getElementById('documents-grid');
+grid.innerHTML = '';
+
+// Add create doc box
+const createDoc = document.createElement('div');
+createDoc.className = 'create-doc';
+createDoc.id = 'create-doc';
+createDoc.innerHTML = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2">
+  <rect x="3" y="3" width="22" height="22" rx="4" ry="4"/>
+  <line x1="14" y1="8" x2="14" y2="20"/>
+  <line x1="8" y1="14" x2="20" y2="14"/>
+</svg>
+
+<span>Check new text</span>
+`;
+createDoc.addEventListener('click', showCreateDocModal);
+grid.appendChild(createDoc);
+
+// Calculate pagination
+const totalPages = Math.ceil(documents.length / docsPerPage);
+document.getElementById('total-pages').textContent = totalPages;
+
+// Adjust current page if needed
+if (currentPage > totalPages && totalPages > 0) {
+currentPage = totalPages;
+} else if (totalPages === 0) {
+currentPage = 1;
+}
+
+// Update pagination buttons
+document.getElementById('prev-page').disabled = currentPage === 1;
+document.getElementById('next-page').disabled = currentPage === totalPages || totalPages === 0;
+
+// Add tooltips
+document.getElementById('prev-page').title = currentPage === 1 ? 'You are on the first page' : 'Previous page';
+document.getElementById('next-page').title = currentPage === totalPages ? 'You are on the last page' : 'Next page';
+
+// Display documents for current page
+const startIdx = (currentPage - 1) * docsPerPage;
+const endIdx = Math.min(startIdx + docsPerPage, documents.length);
+
+for (let i = startIdx; i < endIdx; i++) {
+const doc = documents[i];
+const docCard = document.createElement('div');
+docCard.className = 'doc-card';
+docCard.innerHTML = `
+<div class="doc-date">Created: ${doc.created}</div>
+<div class="doc-name">${doc.name}</div>
+<div class="doc-date">Last Edited: ${doc.lastEdited}</div>
+<div class="doc-actions">
+<button class="action-button" onclick="toggleActionMenu(this)">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+<path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+</svg>
+</button>
+<div class="action-menu">
+<button onclick="editDocument('${doc.id}')">Edit</button>
+<button onclick="showRenameModal('${doc.id}')">Rename</button>
+<button onclick="showDeleteModal('${doc.id}')">Delete</button>
+<button onclick="downloadDocument('${doc.id}')">Download</button>
+</div>
+</div>
+`;
+docCard.addEventListener('click', (e) => {
+if (!e.target.closest('.doc-actions')) {
+editDocument(doc.id);
+}
+});
+grid.appendChild(docCard);
+}
+}
+
+function toggleActionMenu(button) {
+const menu = button.nextElementSibling;
+const allMenus = document.querySelectorAll('.action-menu');
+allMenus.forEach(m => {
+if (m !== menu) m.style.display = 'none';
+});
+menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+}
+
+function showCreateDocModal() {
+const newDocName = prompt('Enter document name:');
+if (newDocName && newDocName.trim()) {
+const now = new Date();
+const doc = {
+id: 'doc-' + Date.now(),
+name: newDocName.trim(),
+created: now.toLocaleDateString('en-GB'),
+lastEdited: now.toLocaleDateString('en-GB')
+};
+documents.unshift(doc);
+saveDocuments();
+currentPage = 1;
+renderDocuments();
+}
+}
+
+function editDocument(docId) {
+if (docId === 'demo') {
+alert('This is a demo document. Create a new document to edit.');
+return;
+}
+// In a real app, this would open the editor
+console.log('Editing document:', docId);
+}
+
+function showRenameModal(docId) {
+const doc = documents.find(d => d.id === docId);
+if (!doc) return;
+
+const modal = document.getElementById('rename-modal');
+document.getElementById('rename-input').value = doc.name;
+modal.dataset.docId = docId;
+showModal('rename-modal');
+}
+
+function renameDocument() {
+const modal = document.getElementById('rename-modal');
+const docId = modal.dataset.docId;
+const newName = document.getElementById('rename-input').value.trim();
+
+if (newName) {
+const doc = documents.find(d => d.id === docId);
+if (doc) {
+doc.name = newName;
+doc.lastEdited = new Date().toLocaleDateString('en-GB');
+saveDocuments();
+renderDocuments();
+}
+}
+hideModal('rename-modal');
+}
+
+function showDeleteModal(docId) {
+const doc = documents.find(d => d.id === docId);
+if (!doc) return;
+
+const modal = document.getElementById('delete-modal');
+document.getElementById('doc-to-delete').textContent = doc.name;
+modal.dataset.docId = docId;
+showModal('delete-modal');
+}
+
+function deleteDocument() {
+const modal = document.getElementById('delete-modal');
+const docId = modal.dataset.docId;
+
+documents = documents.filter(d => d.id !== docId);
+saveDocuments();
+
+// Adjust current page if needed
+const totalPages = Math.ceil(documents.length / docsPerPage);
+if (currentPage > totalPages && totalPages > 0) {
+currentPage = totalPages;
+} else if (totalPages === 0) {
+currentPage = 1;
+}
+
+renderDocuments();
+hideModal('delete-modal');
+}
+
+function downloadDocument(docId) {
+const doc = documents.find(d => d.id === docId);
+if (doc) {
+// In a real app, this would download the actual content
+alert(`Downloading "${doc.name}"`);
+}
+}
+
+function showModal(modalId) {
+document.getElementById(modalId).style.display = 'flex';
+}
+
+function hideModal(modalId) {
+document.getElementById(modalId).style.display = 'none';
+}
+
+// Pagination
+function setupPagination() {
+document.getElementById('prev-page').addEventListener('click', () => {
+if (currentPage > 1) {
+currentPage--;
+renderDocuments();
+document.getElementById('current-page').textContent = currentPage;
+}
+});
+
+document.getElementById('next-page').addEventListener('click', () => {
+const totalPages = Math.ceil(documents.length / docsPerPage);
+if (currentPage < totalPages) {
+currentPage++;
+renderDocuments();
+document.getElementById('current-page').textContent = currentPage;
+}
+});
+
+document.getElementById('current-page').addEventListener('blur', () => {
+const totalPages = Math.ceil(documents.length / docsPerPage);
+let newPage = parseInt(document.getElementById('current-page').textContent);
+
+if (isNaN(newPage) || newPage < 1) {
+newPage = 1;
+} else if (newPage > totalPages) {
+newPage = totalPages;
+showModal('page-modal');
+}
+
+currentPage = newPage;
+document.getElementById('current-page').textContent = currentPage;
+renderDocuments();
+});
+
+document.getElementById('current-page').addEventListener('keydown', (e) => {
+if (e.key === 'Enter') {
+e.preventDefault();
+document.getElementById('current-page').blur();
+}
+});
+}
+
+// Close modals when clicking outside
+window.addEventListener('click', (e) => {
+if (e.target.classList.contains('modal')) {
+e.target.style.display = 'none';
+}
+});
+
+// Close action menus when clicking elsewhere
+window.addEventListener('click', (e) => {
+if (!e.target.closest('.doc-actions')) {
+document.querySelectorAll('.action-menu').forEach(menu => {
+menu.style.display = 'none';
+});
+}
+});
+
+// Initialize
+function init() {
+updateGreeting();
+loadDocuments();
+setupPagination();
+
+// Load display name
+const displayName = localStorage.getItem('outparse-display-name') || 'Curious Cat';
+document.getElementById('display-name').textContent = displayName;
+
+// Make display name editable
+document.getElementById('display-name').addEventListener('blur', function() {
+const newName = this.textContent.trim();
+if (newName) {
+localStorage.setItem('outparse-display-name', newName);
+}
+});
+}
+
+// Run when DOM is loaded
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
