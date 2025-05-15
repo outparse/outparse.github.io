@@ -21,6 +21,25 @@
 --radius-md: 8px;
 --transition: all 0.2s ease-in-out;
 --max-width: 1200px;
+
+--text-xs: 0.75rem; 
+--text-sm: 0.875rem;
+--text-base: 1rem;  
+--text-md: 1.125rem;
+--text-lg: 1.25rem; 
+--text-xl: 1.5rem;  
+--text-2xl: 1.875rem; 
+--text-3xl: 2.25rem;
+--text-4xl: 3rem; 
+--text-5xl: 3.75rem;  
+
+--leading-none: 1;
+--leading-tight: 1.25;
+--leading-snug: 1.375;
+--leading-normal: 1.5;
+--leading-relaxed: 1.625;
+--leading-loose: 2;
+
 --gradient: linear-gradient(
 to bottom right,
 rgba(245, 245, 245, 1) 0%,
@@ -33,12 +52,66 @@ rgba(190, 190, 190, 1) 100%
 
 html {
 scroll-behavior: smooth;
+font-size: 100%; 
 }
 
 * {
 margin: 0;
 padding: 0;
 box-sizing: border-box;
+}
+
+h1 {
+font-size: var(--text-2xl);
+line-height: var(--leading-tight);
+font-weight: 700;
+}
+
+h2 {
+font-size: var(--text-xl);
+line-height: var(--leading-tight);
+font-weight: 700;
+}
+
+h3 {
+font-size: var(--text-lg);
+line-height: var(--leading-snug);
+font-weight: 700;
+}
+
+p {
+font-size: var(--text-base);
+line-height: var(--leading-relaxed);
+max-width: 65ch;
+}
+
+.small-text {
+font-size: var(--text-sm);
+line-height: var(--leading-normal);
+}
+
+a {
+color: var(--color-primary);
+text-decoration: none;
+transition: var(--transition);
+outline: none;
+}
+
+a:hover,
+a:focus {
+color: var(--color-focus);
+text-decoration-thickness: 2px;
+}
+
+a:active {
+color: var(--color-secondary);
+text-decoration-thickness: 2px;
+}
+
+a:focus-visible {
+outline: 2px solid var(--color-focus);
+outline-offset: 2px;
+border-radius: var(--radius-sm);
 }
 
 body {
@@ -55,9 +128,22 @@ width: 100%;
 margin: 0 auto;
 }
 
+.skip-link {
+position: absolute;
+left: -9999px;
+top: 0;
+background: var(--color-primary);
+color: white;
+padding: 1rem;
+z-index: 1000;
+}
+
+.skip-link:focus {
+left: 0;
+}
+
 main {
 flex: 1;
-margin: 3rem 0;
 }
 
 header {
@@ -101,7 +187,6 @@ color: var(--color-secondary);
 }
 
 .hero h1 {
-font-size: 2.5rem;
 margin-bottom: 1.5rem;
 }
 
@@ -166,7 +251,6 @@ box-shadow: var(--shadow-sm);
 }
 
 .feature-icon {
-font-size: 2rem;
 margin-bottom: 1rem;
 color: var(--color-primary);
 }
@@ -238,6 +322,25 @@ border-radius: var(--radius-sm);
 min-height: 150px;
 resize: vertical;
 font-family: inherit;
+overflow-y: auto;
+}
+
+textarea::-webkit-scrollbar {
+width: 8px;
+}
+
+textarea::-webkit-scrollbar-track {
+background: var(--color-lighter);
+border-radius: 10px;
+}
+
+textarea::-webkit-scrollbar-thumb {
+background-color: var(--color-gray);
+border-radius: 10px;
+}
+
+textarea::-webkit-scrollbar-thumb:hover {
+background-color: var(--color-secondary);
 }
 
 .modal {
@@ -252,22 +355,47 @@ justify-content: center;
 align-items: center;
 z-index: 100;
 display: none;
+overflow-y: auto;
+}
+
+body.modal-open {
+overflow: hidden;
 }
 
 .modal-content {
 background: var(--color-white);
-padding: 2rem;
+padding: 2rem 1.5rem;
 border-radius: var(--radius-md);
 max-width: 500px;
-width: 90%;
+width: 100%;
 box-shadow: var(--shadow-md);
+max-height: 90vh;
+overflow-y: auto;
+}
+
+.modal-content::-webkit-scrollbar {
+width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+background: var(--color-lighter);
+border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+background-color: var(--color-gray);
+border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+background-color: var(--color-secondary);
 }
 
 .modal-buttons {
 display: flex;
 justify-content: flex-end;
 gap: 1rem;
-margin-top: 1.5rem;
+margin-top: 1rem;
 }
 
 .modal-buttons button {
@@ -293,6 +421,33 @@ background: var(--color-light);
 
 .cancel-btn:hover {
 background: var(--color-dark-gray);
+}
+
+.modal-options {
+display: flex;
+flex-direction: column;
+gap: 1.5rem;
+margin: 1rem 0;
+}
+
+.modal-option {
+background: var(--color-lighter);
+padding: 1rem;
+border-radius: var(--radius-md);
+transition: var(--transition);
+}
+
+.modal-option:hover {
+transform: translateY(-2px);
+box-shadow: var(--shadow-sm);
+}
+
+.modal-option h3 {
+margin-bottom: 0.5rem;
+}
+
+.modal-option p {
+color: var(--color-secondary);
 }
 
 footer {
@@ -366,43 +521,68 @@ align-items: flex-end;
 
 .modal-content {
 width: 100%;
+max-height: 80vh;
 }
 }
 </style>
 </head>
 <body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
 <header>
 <a href="/"><img src="/assets/images/outparse-mono.svg" alt="Outparse Logo" class="logo"></a>
 </header>
 
-<main>
+<main id="main-content" role="main">
 <section class="hero">
 <p class="pre-heading">FREE FOREVER</p>
 <h1>Improve Your Writing</h1>
 <p>Outparse is a free, open source tool that helps you write more clearly and confidently.</p>
-<a href="#" class="btn">Get started</a>
+<a href="#" class="btn" id="getStartedBtn">Get started</a>
 </section>
 
 <section class="section">
 <h2 class="section-heading">Features</h2>
 <div class="features-grid">
 <div class="feature-card">
-<div class="feature-icon">️🔍</div>
+<div class="feature-icon">
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="11" cy="11" r="8"></circle>
+<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+</svg>
+</div>
 <h3>Spellcheck</h3>
 <p>Recognizes and respects spelling differences across English dialects.</p>
 </div>
 <div class="feature-card">
-<div class="feature-icon">📝</div>
+<div class="feature-icon">
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M12 20h9"></path>
+<path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+</svg>
+</div>
 <h3>Grammar & Punctuation Checks</h3>
 <p>Get friendly, clear explanations of what needs fixing—and why it matters.</p>
 </div>
 <div class="feature-card">
-<div class="feature-icon">🎚️</div>
+<div class="feature-icon">
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+<circle cx="9" cy="7" r="4"></circle>
+<path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+<path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+</svg>
+</div>
 <h3>Tone Suggestions</h3>
 <p>Want to sound more formal? Or keep it relaxed and friendly? You choose your tone—Outparse helps you match it.</p>
 </div>
 <div class="feature-card">
-<div class="feature-icon">🌐</div>
+<div class="feature-icon">
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers" viewBox="0 0 24 24">
+<polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+<polyline points="2 17 12 22 22 17"></polyline>
+<polyline points="2 12 12 17 22 12"></polyline>
+</svg>
+</div>
 <h3>Open Linguistic Database</h3>
 <p>All the rules and word data Outparse uses are open, free to view, and constantly evolving.</p>
 </div>
@@ -466,9 +646,28 @@ width: 100%;
 </div>
 </section>
 
+<div class="modal" id="startModal" role="dialog" aria-modal="true" aria-labelledby="modal-heading">
+<div class="modal-content">
+<h2>✨ Choose how you'd like to start</h2>
+<div class="modal-options">
+<a href="/app/home.html" class="modal-option">
+<h3>Continue as a Guest</h3>
+<p>No sign-up. Your writing stays on your device and clears if you reset your browser. Great for private or one-time work.</p>
+</a>
+<a href="https://app.outparse.com/sign-up.html" class="modal-option">
+<h3>Sign Up or Sign In</h3>
+<p>Create an account to save your writing and preferences on our cloud. Great if you want to continue writing later across different browsers or devices.</p>
+</a>
+</div>
+<div class="modal-buttons">
+<button class="cancel-btn" id="cancelModalBtn">Cancel</button>
+</div>
+</div>
+</div>
+
 </main>
 
-<footer>
+<footer role="contentinfo">
 <div class="footer-nav">
 <a href="/">About</a>
 <a href="/index.html#feedback">Feedback</a>
@@ -505,6 +704,36 @@ width: 100%;
 &copy; <script>document.write(new Date().getFullYear())</script> Outparse. Created by <a href="https://itsgbemi.github.io" target="_blank">Gbemisola Oyeniyi</a>. This open source project is licensed under the <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank">GNU Affero General Public License v3.0</a>. All Rights Reserved.
 </div>
 </footer>
+
+<script>
+document.getElementById('getStartedBtn').addEventListener('click', function(e) {
+e.preventDefault();
+document.body.classList.add('modal-open');
+document.getElementById('startModal').style.display = 'flex';
+});
+
+document.getElementById('cancelModalBtn').addEventListener('click', function() {
+document.body.classList.remove('modal-open');
+document.getElementById('startModal').style.display = 'none';
+});
+
+window.addEventListener('click', function(event) {
+if (event.target === document.getElementById('startModal')) {
+document.body.classList.remove('modal-open');
+document.getElementById('startModal').style.display = 'none';
+}
+});
+
+const ratingOptions = document.querySelectorAll('.rating-option');
+ratingOptions.forEach(option => {
+option.addEventListener('keydown', (e) => {
+if (e.key === 'Enter' || e.key === ' ') {
+e.preventDefault();
+option.click();
+}
+});
+});
+</script>
 
 </body>
 </html>
