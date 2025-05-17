@@ -1,0 +1,1775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document Editor | Outparse</title>
+<link rel="license" href="https://www.gnu.org/licenses/agpl-3.0.html">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="/assets/js/regional-spellings.js"></script>
+<style>
+:root {
+--color-primary: #333;
+--color-secondary: #666;
+--color-light: #f5f5f5;
+--color-lighter: #f9f9f9;
+--color-white: #fff;
+--color-gray: #ccc;
+--color-dark-gray: #e0e0e0;
+--shadow-sm: 2px 2px 0 rgba(0, 0, 0, 0.1);
+--shadow-md: 4px 4px 0 rgba(0, 0, 0, 0.15);
+--radius-sm: 4px;
+--radius-md: 8px;
+--transition: all 0.2s ease-in-out;
+--max-width: 1200px;
+--gradient: linear-gradient(
+to bottom right,
+rgba(245, 245, 245, 1) 0%,
+rgba(235, 235, 235, 1) 40%,
+rgba(220, 220, 220, 1) 70%,
+rgba(205, 205, 205, 1) 85%,
+rgba(190, 190, 190, 1) 100%
+);
+--error-punctuation: #FF6B6B;
+--error-capitalization: #4ECDC4;
+--error-doublespace: #FFBE0B;
+--error-grammar: #A78BFA;
+--error-spelling: #FF8E8E;
+}
+
+html {
+scroll-behavior: smooth;
+}
+
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+display: flex;
+flex-direction: column;
+min-height: 100vh;
+background-color: var(--color-white);
+color: var(--color-primary);
+font-family: 'Noto Sans', sans-serif;
+line-height: 1.6;
+transition: var(--transition);
+max-width: 1440px;
+width: 100%;
+margin: 0 auto;
+}
+
+main {
+flex: 1;
+margin: 3rem 0;
+display: flex;
+flex-direction: column;
+}
+
+header {
+padding: 2rem 1rem;
+text-align: center;
+background: var(--gradient);
+}
+
+.logo {
+max-width: 150px;
+height: auto;
+}
+
+.nav-buttons {
+display: flex;
+justify-content: center;
+gap: 1.5rem;
+flex-wrap: wrap;
+margin: 1.5rem 0;
+}
+
+.nav-button {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 0.5rem;
+cursor: pointer;
+max-width: 80px;
+transition: var(--transition);
+}
+
+.nav-button:hover {
+transform: translateY(-2px);
+}
+
+.editor-wrapper {
+display: flex;
+flex-wrap: wrap;
+gap: 2rem;
+max-width: var(--max-width);
+margin: 0 auto;
+padding: 0 2rem;
+width: 100%;
+}
+
+.editor-container {
+flex: 2;
+min-width: 300px;
+}
+
+.result-container {
+flex: 1;
+min-width: 300px;
+display: flex;
+flex-direction: column;
+border: 1px solid var(--color-light);
+background: var(--color-white);
+border-radius: var(--radius-md);
+overflow: hidden;
+}
+
+.result-header {
+padding: 1rem;
+background: var(--color-lighter);
+border-bottom: 1px solid var(--color-light);
+font-weight: 700;
+}
+
+.result-content {
+flex: 1;
+overflow-y: auto;
+padding: 1rem;
+max-height: 600px;
+}
+
+.result-empty-state {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+height: 100%;
+padding: 2rem;
+text-align: center;
+color: var(--color-secondary);
+}
+
+.result-empty-state img {
+width: 80px;
+height: 80px;
+margin-bottom: 1rem;
+opacity: 0.7;
+}
+
+.suggestion-item {
+padding: 1rem;
+margin-bottom: 1rem;
+border-radius: var(--radius-sm);
+background: var(--color-lighter);
+border-left: 4px solid;
+}
+
+.suggestion-item.punctuation {
+border-left-color: var(--error-punctuation);
+}
+
+.suggestion-item.capitalization {
+border-left-color: var(--error-capitalization);
+}
+
+.suggestion-item.doublespace {
+border-left-color: var(--error-doublespace);
+}
+
+.suggestion-item.grammar {
+border-left-color: var(--error-grammar);
+}
+
+.suggestion-item.spelling {
+border-left-color: var(--error-spelling);
+}
+
+.suggestion-header {
+display: flex;
+align-items: center;
+margin-bottom: 0.5rem;
+}
+
+.error-indicator {
+width: 12px;
+height: 12px;
+border-radius: 50%;
+margin-right: 0.5rem;
+}
+
+.error-label {
+font-weight: 500;
+font-size: 0.9rem;
+}
+
+.suggestion-text {
+font-weight: 700;
+margin: 0.5rem 0;
+}
+
+.suggestion-instruction {
+font-size: 0.9rem;
+color: var(--color-secondary);
+margin-bottom: 0.75rem;
+}
+
+.suggestion-actions {
+display: flex;
+gap: 0.5rem;
+}
+
+.suggestion-button {
+padding: 0.5rem 1rem;
+border-radius: var(--radius-sm);
+border: none;
+cursor: pointer;
+font-size: 0.85rem;
+transition: var(--transition);
+}
+
+.suggestion-button.accept {
+background: var(--color-primary);
+color: var(--color-white);
+}
+
+.suggestion-button.accept:hover {
+background: #222;
+}
+
+.suggestion-button.ignore {
+background: var(--color-white);
+border: 1px solid var(--color-gray);
+}
+
+.suggestion-button.ignore:hover {
+background: var(--color-light);
+}
+
+.toolbar {
+background: var(--color-lighter);
+border-top: 1px solid var(--color-light);
+border-left: 1px solid var(--color-light);
+border-right: 1px solid var(--color-light);
+border-top-left-radius: var(--radius-sm);
+border-top-right-radius: var(--radius-sm);
+padding: 1rem;
+display: flex;
+flex-wrap: wrap;
+gap: 0.5rem;
+}
+
+.toolbar-group {
+display: flex;
+flex-wrap: wrap;
+gap: 0.5rem;
+align-items: center;
+padding: 0.5rem;
+}
+
+.tool-button {
+background: var(--color-white);
+border: 1px solid var(--color-gray);
+border-radius: var(--radius-sm);
+padding: 0.5rem;
+cursor: pointer;
+transition: var(--transition);
+display: flex;
+align-items: center;
+justify-content: center;
+min-width: 36px;
+height: 36px;
+}
+
+.tool-button:hover {
+background: var(--color-light);
+transform: translateY(-1px);
+}
+
+.tool-button.active {
+background: var(--color-primary);
+color: var(--color-white);
+}
+
+.dropdown {
+position: relative;
+display: inline-block;
+}
+
+.dropdown-toggle {
+background: var(--color-white);
+border: 1px solid var(--color-gray);
+border-radius: var(--radius-sm);
+padding: 0.5rem 1rem;
+cursor: pointer;
+transition: var(--transition);
+display: flex;
+align-items: center;
+gap: 0.5rem;
+height: 36px;
+}
+
+.dropdown-toggle:hover {
+background: var(--color-light);
+}
+
+.dropdown-menu {
+position: absolute;
+top: 100%;
+left: 0;
+background: var(--color-white);
+border: 1px solid var(--color-gray);
+border-radius: var(--radius-sm);
+box-shadow: var(--shadow-md);
+z-index: 100;
+display: none;
+width: max-content;
+max-width: 280px;
+padding: 0.5rem 0;
+}
+
+.dropdown-menu.show {
+display: block;
+}
+
+.dropdown-item {
+padding: 0.5rem 1rem;
+cursor: pointer;
+transition: var(--transition);
+display: flex;
+flex-direction: column;
+gap: 0.25rem;
+}
+
+.dropdown-item:hover {
+background: var(--color-light);
+}
+
+#languageMenu .dropdown-item span:first-child {
+font-weight: 700;
+}
+
+#languageMenu .dropdown-item span:last-child {
+font-weight: 400;
+color: var(--color-secondary);
+font-size: 0.85rem;
+}
+
+#statsMenu .dropdown-item {
+flex-direction: row;
+align-items: center;
+gap: 0.5rem;
+}
+
+#toneMenu .dropdown-item span:first-child {
+font-weight: 700;
+}
+
+#toneMenu .dropdown-item span:last-child {
+font-weight: 400;
+color: var(--color-secondary);
+font-size: 0.85rem;
+}
+
+.editor-content {
+min-height: 500px;
+border: 1px solid var(--color-light);
+padding: 2rem;
+background: var(--color-white);
+outline: none;
+overflow-y: auto;
+max-height: 600px;
+}
+
+.editor-content:empty:before {
+content: "Type or paste your content here...";
+color: var(--color-gray);
+}
+
+.editor-content:focus {
+border-color: var(--color-primary);
+}
+
+.editor-content ul,
+.editor-content ol {
+padding-left: 2rem;
+}
+
+.editor-content ul {
+list-style-type: disc;
+}
+
+.editor-content ol {
+list-style-type: decimal;
+}
+
+.editor-content::-webkit-scrollbar,
+.result-content::-webkit-scrollbar {
+width: 6px;
+}
+
+.editor-content::-webkit-scrollbar-track,
+.result-content::-webkit-scrollbar-track {
+background: var(--color-lighter);
+}
+
+.editor-content::-webkit-scrollbar-thumb,
+.result-content::-webkit-scrollbar-thumb {
+background: var(--color-gray);
+border-radius: 3px;
+}
+
+.editor-content::-webkit-scrollbar-thumb:hover,
+.result-content::-webkit-scrollbar-thumb:hover {
+background: var(--color-secondary);
+}
+
+.error-highlight {
+position: relative;
+padding-bottom: 2px;
+}
+
+.error-highlight.punctuation {
+border-bottom: 2px solid var(--error-punctuation);
+}
+
+.error-highlight.capitalization {
+border-bottom: 2px solid var(--error-capitalization);
+}
+
+.error-highlight.doublespace {
+border-bottom: 2px solid var(--error-doublespace);
+}
+
+.error-highlight.grammar {
+border-bottom: 2px solid var(--error-grammar);
+}
+
+.error-highlight.spelling {
+border-bottom: 2px solid var(--error-spelling);
+}
+
+.stats-container {
+display: flex;
+background: var(--color-lighter);
+border-bottom: 1px solid var(--color-light);
+border-left: 1px solid var(--color-light);
+border-right: 1px solid var(--color-light);
+border-bottom-left-radius: var(--radius-sm);
+border-bottom-right-radius: var(--radius-sm);
+padding: 1rem;
+align-items: center;
+flex-wrap: wrap;
+gap: 1rem;
+}
+
+.stats-group {
+display: flex;
+align-items: center;
+gap: 0.5rem;
+}
+
+.stat-button {
+background: var(--color-lighter);
+border: 1px solid var(--color-gray);
+border-radius: var(--radius-sm);
+padding: 0.25rem 0.5rem;
+cursor: default;
+font-size: 0.9rem;
+}
+
+.stat-label {
+font-size: 0.9rem;
+color: var(--color-secondary);
+}
+
+.modal {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: rgba(0, 0, 0, 0.5);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 1000;
+opacity: 0;
+visibility: hidden;
+transition: all 0.3s ease;
+}
+
+.modal.active {
+opacity: 1;
+visibility: visible;
+}
+
+.modal-content {
+background: var(--color-white);
+padding: 2rem;
+border-radius: var(--radius-md);
+max-width: 500px;
+width: 90%;
+box-shadow: var(--shadow-md);
+}
+
+.modal-header {
+font-size: 1.25rem;
+font-weight: 700;
+margin-bottom: 1rem;
+}
+
+.modal-body {
+margin-bottom: 2rem;
+}
+
+.modal-footer {
+display: flex;
+justify-content: flex-end;
+gap: 1rem;
+}
+
+.modal-button {
+padding: 0.5rem 1rem;
+border-radius: var(--radius-sm);
+cursor: pointer;
+font-size: 0.9rem;
+transition: var(--transition);
+}
+
+.modal-button.primary {
+background: var(--color-primary);
+color: var(--color-white);
+border: none;
+}
+
+.modal-button.primary:hover {
+background: #222;
+}
+
+.modal-button.secondary {
+background: var(--color-white);
+border: 1px solid var(--color-gray);
+}
+
+.modal-button.secondary:hover {
+background: var(--color-light);
+}
+
+.document-title {
+font-size: 1.5rem;
+font-weight: 700;
+margin-bottom: 1rem;
+padding: 0.5rem;
+border-bottom: 2px dotted var(--color-primary);
+cursor: pointer;
+transition: var(--transition);
+}
+
+.document-title:hover {
+background-color: var(--color-lighter);
+}
+
+.document-title-input {
+font-size: 1.5rem;
+font-weight: 700;
+margin-bottom: 1rem;
+padding: 0.5rem;
+border: 1px solid var(--color-gray);
+border-radius: var(--radius-sm);
+width: 100%;
+outline: none;
+}
+
+footer {
+width: 100%;
+background: var(--gradient);
+padding: 3rem 2rem;
+text-align: center;
+margin-top: auto;
+}
+
+.footer-nav {
+display: flex;
+justify-content: center;
+gap: 2rem;
+margin-bottom: 1.5rem;
+flex-wrap: wrap;
+}
+
+.footer-nav a {
+text-decoration: none;
+color: var(--color-primary);
+transition: var(--transition);
+}
+
+.footer-nav a:hover {
+color: var(--color-secondary);
+}
+
+.social-icons {
+display: flex;
+justify-content: center;
+gap: 1.5rem;
+margin-bottom: 1.5rem;
+}
+
+.social-icons a {
+display: inline-block;
+transition: var(--transition);
+}
+
+.social-icons a:hover {
+transform: translateY(-2px);
+}
+
+.social-icons svg {
+width: 24px;
+height: 24px;
+color: var(--color-primary);
+}
+
+.copyright {
+font-size: 0.9rem;
+color: var(--color-secondary);
+}
+
+.copyright a {
+text-decoration: none;
+color: var(--color-primary);
+border-bottom: 1px dotted var(--color-primary);
+transition: var(--transition);
+}
+
+.copyright a:hover {
+border-bottom-color: transparent;
+}
+
+@media (max-width: 767px) {
+.editor-wrapper {
+flex-direction: column;
+padding: 0 1rem;
+}
+
+.editor-container,
+.result-container {
+width: 100%;
+}
+
+.toolbar-group {
+border-right: none;
+}
+
+.editor-content {
+padding: 1rem;
+min-height: 380px;
+}
+
+.modal {
+align-items: flex-end;
+}
+
+.modal-content {
+width: 100%;
+padding: 1.5rem;
+}
+
+.dropdown-menu {
+max-width: 150px;
+}
+}
+</style>
+</head>
+<body>
+<header>
+<a href="/"><img src="/assets/images/outparse-mono.svg" alt="Outparse Logo" class="logo"></a>
+<div class="nav-buttons">
+<div class="nav-button">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+<polyline points="14 2 14 8 20 8" />
+<polyline points="9 15 11 17 15 13" />
+</svg>
+<span>Documents</span>
+</div>
+<div class="nav-button">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M4 4h5l2 3h9a2 2 0 0 1 2 2v1H2V6a2 2 0 0 1 2-2z" />
+<path d="M2 10h20v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z" />
+</svg>
+<span>Downloads</span>
+</div>
+<div class="nav-button">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<line x1="4" y1="21" x2="4" y2="14" />
+<line x1="4" y1="10" x2="4" y2="3" />
+<line x1="12" y1="21" x2="12" y2="12" />
+<line x1="12" y1="8" x2="12" y2="3" />
+<line x1="20" y1="21" x2="20" y2="16" />
+<line x1="20" y1="12" x2="20" y2="3" />
+<circle cx="4" cy="12" r="2" />
+<circle cx="12" cy="10" r="2" />
+<circle cx="20" cy="14" r="2" />
+</svg>
+<span>Settings</span>
+</div>
+</div>
+</header>
+
+<main>
+<div class="editor-wrapper">
+<div class="editor-container">
+<div class="document-title" id="documentTitle"></div>
+<div class="toolbar">
+<div class="toolbar-group">
+<div class="dropdown">
+<button class="dropdown-toggle" id="languageDropdown"><span>en-US</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg></button>
+<div class="dropdown-menu" id="languageMenu">
+<div class="dropdown-item" data-lang="en-US"><span>en-US</span><span>American English</span></div>
+<div class="dropdown-item" data-lang="en-GB"><span>en-GB</span><span>British English</span></div>
+<div class="dropdown-item" data-lang="en-AU"><span>en-AU</span><span>Australian English</span></div>
+<div class="dropdown-item" data-lang="en-CA"><span>en-CA</span><span>Canadian English</span></div>
+</div>
+</div>
+
+<div class="dropdown">
+<button class="dropdown-toggle" id="toneDropdown"><span>Formal</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg></button>
+<div class="dropdown-menu" id="toneMenu">
+<div class="dropdown-item" data-tone="formal"><span>Formal</span><span>Best for professional, academic, or official writing</span></div>
+<div class="dropdown-item" data-tone="informal"><span>Informal</span><span>Best for casual, conversational, or personal writing</span></div>
+</div>
+</div>
+</div>
+
+<div class="toolbar-group">
+<button class="tool-button" id="undoButton" title="Undo"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/><path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/></svg></button>
+<button class="tool-button" id="redoButton" title="Redo"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/></svg></button>
+<button class="tool-button" id="clearButton" title="Clear"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg></button>
+</div>
+
+<div class="toolbar-group">
+<button class="tool-button" id="boldButton" title="Bold"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8.21 13c2.106 0 3.412-1.087 3.412-2.823 0-1.306-.984-2.283-2.324-2.386v-.055a2.176 2.176 0 0 0 1.852-2.14c0-1.51-1.162-2.46-3.014-2.46H3.843V13H8.21zM5.908 4.674h1.696c.963 0 1.517.451 1.517 1.244 0 .834-.629 1.32-1.73 1.32H5.908V4.673zm0 6.788V8.598h1.73c1.217 0 1.88.492 1.88 1.415 0 .943-.643 1.449-1.832 1.449H5.907z"/></svg></button>
+<button class="tool-button" id="italicButton" title="Italic"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M7.991 11.674 9.53 4.455c.123-.595.246-.71 1.347-.807l.11-.52H7.211l-.11.52c1.06.096 1.128.212 1.005.807L6.57 11.674c-.123.595-.246.71-1.346.806l-.11.52h3.774l.11-.52c-1.06-.095-1.129-.211-1.006-.806z"/></svg></button>
+<button class="tool-button" id="underlineButton" title="Underline"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M5.313 3.136h-1.23V9.54c0 2.105 1.47 3.623 3.917 3.623s3.917-1.518 3.917-3.623V3.136h-1.23v6.323c0 1.49-.978 2.57-2.687 2.57-1.709 0-2.687-1.08-2.687-2.57V3.136zM12.5 15h-9v-1h9v1z"/></svg></button>
+<button class="tool-button" id="strikeButton" title="Strikethrough"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M6.333 5.686c0 .31.083.581.27.814H5.166a2.776 2.776 0 0 1-.099-.76c0-1.627 1.436-2.768 3.48-2.768 1.969 0 3.39 1.175 3.445 2.85h-1.23c-.11-1.08-.964-1.743-2.25-1.743-1.23 0-2.18.602-2.18 1.607zm2.194 7.478c-2.153 0-3.589-1.107-3.705-2.81h1.23c.144 1.06 1.129 1.703 2.544 1.703 1.34 0 2.31-.705 2.31-1.675 0-.827-.547-1.374-1.914-1.675L8.046 8.5H1v-1h14v1h-3.504c.468.437.675.994.675 1.697 0 1.826-1.436 2.967-3.644 2.967z"/></svg></button>
+</div>
+
+<div class="toolbar-group">
+<button class="tool-button" id="listUlButton" title="Bullet List"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg></button>
+<button class="tool-button" id="listOlButton" title="Numbered List"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5z"/><path d="M1.713 11.865v-.474H2c.217 0 .363-.137.363-.317 0-.185-.158-.31-.361-.31-.223 0-.367.152-.373.31h-.59c.016-.467.373-.787.986-.787.588-.002.954.291.957.703a.595.595 0 0 1-.492.594v.033a.615.615 0 0 1 .569.631c.003.533-.502.8-1.051.8-.656 0-1-.37-1.008-.794h.582c.008.178.186.306.422.309.254 0 .424-.145.422-.35-.002-.195-.155-.348-.414-.348h-.3zm-.004-4.699h-.604v-.035c0-.408.295-.844.958-.844.583 0 .96.326.96.756 0 .389-.257.617-.476.848l-.537.572v.03h1.054V9H1.143v-.395l.957-.99c.138-.142.293-.304.293-.508 0-.18-.147-.32-.342-.32a.33.33 0 0 0-.342.338v.041zM2.564 5h-.635V2.924h-.031l-.598.42v-.567l.629-.443h.635V5z"/></svg></button>
+<button class="tool-button" id="blockquoteButton" title="Blockquote"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M12 12a1 1 0 0 0 1-1V8.558a1 1 0 0 0-1-1h-1.388c0-.351.021-.703.062-1.054.062-.372.166-.703.31-.992.145-.29.331-.517.559-.683.227-.186.516-.279.868-.279V3c-.579 0-1.085.124-1.52.372a3.322 3.322 0 0 0-1.085.992 4.92 4.92 0 0 0-.62 1.458A7.712 7.712 0 0 0 9 7.558V11a1 1 0 0 0 1 1h2Zm-6 0a1 1 0 0 0 1-1V8.558a1 1 0 0 0-1-1H4.612c0-.351.021-.703.062-1.054.062-.372.166-.703.31-.992.145-.29.331-.517.559-.683.227-.186.516-.279.868-.279V3c-.579 0-1.085.124-1.52.372a3.322 3.322 0 0 0-1.085.992 4.92 4.92 0 0 0-.62 1.458A7.712 7.712 0 0 0 3 7.558V11a1 1 0 0 0 1 1h2Z"/></svg></button>
+<button class="tool-button" id="codeButton" title="Code"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M5.854 4.854a.5.5 0 1 0-.708-.708l-3.5 3.5a.5.5 0 0 0 0 .708l3.5 3.5a.5.5 0 0 0 .708-.708L2.707 8l3.147-3.146zm4.292 0a.5.5 0 0 1 .708-.708l3.5 3.5a.5.5 0 0 1 0 .708l-3.5 3.5a.5.5 0 0 1-.708-.708L13.293 8l-3.147-3.146z"/></svg></button>
+</div>
+
+<div class="toolbar-group">
+<button class="tool-button" id="alignLeftButton" title="Align Left"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M2 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/></svg></button>
+<button class="tool-button" id="alignCenterButton" title="Align Center"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8zm-2 3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 11zm2-6a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 2z"/></svg></button>
+<button class="tool-button" id="alignRightButton" title="Align Right"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M6 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-4-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-4-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/></svg></button>
+</div>
+</div>
+
+<div class="editor-content" id="editorContent" contenteditable="true"></div>
+
+<div class="stats-container">
+<div class="stats-group">
+<button class="stat-button" id="errorsCount">0</button>
+<span class="stat-label">Errors</span>
+</div>
+
+<div class="dropdown">
+<button class="dropdown-toggle" id="statsDropdown"><span id="statsDisplay">0 Words</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg></button>
+<div class="dropdown-menu" id="statsMenu">
+<div class="dropdown-item" data-stat="words"><span>0</span><span>Words</span></div>
+<div class="dropdown-item" data-stat="chars"><span>0</span><span>Characters</span></div>
+<div class="dropdown-item" data-stat="paragraphs"><span>0</span><span>Paragraphs</span></div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="result-container">
+<div class="result-header">Suggestions</div>
+<div class="result-content" id="resultContent">
+<div class="result-empty-state">
+<img src="/assets/images/cool-guy.png" alt="Ready when you are">
+<p>Ready when you are.</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+
+<div class="modal" id="clearModal">
+<div class="modal-content">
+<div class="modal-header">Clear Content</div>
+<div class="modal-body">Are you sure you want to clear all content? This action cannot be undone.</div>
+<div class="modal-footer">
+<button class="modal-button secondary" id="cancelClear">Cancel</button>
+<button class="modal-button primary" id="confirmClear">Clear</button>
+</div>
+</div>
+</div>
+
+<footer>
+<div class="footer-nav">
+<a href="#">Updates</a>
+<a href="#">About</a>
+<a href="#">Disclaimer</a>
+</div>
+<div class="social-icons">
+<a href="#" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-12S17.52 2 12 2zm-1 15.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></a>
+<a href="#" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14m-.5 15.5v-5.3a3.26 3.26 0 00-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 011.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 001.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 00-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg></a>
+<a href="#" aria-label="Twitter"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 01-1.93.07 4.28 4.28 0 004 2.98 8.521 8.521 0 01-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/></svg></a>
+<a href="#" aria-label="Instagram"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 01-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 017.8 2m-.2 2A3.6 3.6 0 004 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 003.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 011.25 1.25A1.25 1.25 0 0117.25 8A1.25 1.25 0 0116 6.75a1.25 1.25 0 011.25-1.25M12 7a5 5 0 015 5 5 5 0 01-5 5 5 5 0 01-5-5 5 5 0 015-5m0 2a3 3 0 00-3 3 3 3 0 003 3 3 3 0 003-3 3 3 0 00-3-3z"/></svg></a>
+<a href="#" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg></a>
+</div>
+<div class="copyright">
+&copy; 2025 Outparse. Created by <a href="https://itsgbemi.github.io" target="_blank">Gbemisola Oyeniyi</a>. This open source project is licensed under the <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank">GNU Affero General Public License v3.0</a>. All Rights Reserved.
+</div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+// Document management
+let currentDocument = null;
+
+// Load or create document
+function loadOrCreateDocument() {
+const savedDocs = localStorage.getItem('outparse-documents');
+let documents = savedDocs ? JSON.parse(savedDocs) : [];
+
+// Check if we're opening an existing document from URL
+const urlParams = new URLSearchParams(window.location.search);
+const docId = urlParams.get('doc');
+
+if (docId) {
+// Find existing document
+currentDocument = documents.find(doc => doc.id === docId);
+if (!currentDocument) {
+// If document not found, redirect to home
+window.location.href = '/';
+return;
+}
+} else {
+// Create new document
+const now = new Date();
+const newId = 'doc-' + Date.now();
+currentDocument = {
+id: newId,
+name: `Untitled ${documents.filter(d => d.name.startsWith('Untitled')).length + 1}`,
+created: now.toISOString(),
+lastEdited: now.toISOString(),
+content: ''
+};
+documents.unshift(currentDocument);
+localStorage.setItem('outparse-documents', JSON.stringify(documents));
+}
+
+// Initialize UI
+document.getElementById('documentTitle').textContent = currentDocument.name;
+document.getElementById('editorContent').innerHTML = currentDocument.content;
+}
+
+// Save document to localStorage
+function saveDocument() {
+if (!currentDocument) return;
+
+const savedDocs = localStorage.getItem('outparse-documents');
+if (savedDocs) {
+const documents = JSON.parse(savedDocs);
+const index = documents.findIndex(doc => doc.id === currentDocument.id);
+if (index !== -1) {
+currentDocument.content = document.getElementById('editorContent').innerHTML;
+currentDocument.lastEdited = new Date().toISOString();
+documents[index] = currentDocument;
+localStorage.setItem('outparse-documents', JSON.stringify(documents));
+}
+}
+}
+
+// Setup document title editing
+const documentTitle = document.getElementById('documentTitle');
+documentTitle.addEventListener('click', function() {
+const currentTitle = this.textContent;
+const input = document.createElement('input');
+input.className = 'document-title-input';
+input.value = currentTitle;
+input.addEventListener('blur', function() {
+const newTitle = this.value.trim();
+if (newTitle && newTitle !== currentTitle) {
+documentTitle.textContent = newTitle;
+// Update in localStorage
+const savedDocs = localStorage.getItem('outparse-documents');
+if (savedDocs) {
+const documents = JSON.parse(savedDocs);
+const doc = documents.find(d => d.id === currentDocument.id);
+if (doc) {
+doc.name = newTitle;
+currentDocument.name = newTitle;
+localStorage.setItem('outparse-documents', JSON.stringify(documents));
+}
+}
+}
+documentTitle.style.display = 'block';
+this.replaceWith(documentTitle);
+});
+input.addEventListener('keydown', function(e) {
+if (e.key === 'Enter') {
+this.blur();
+}
+});
+this.style.display = 'none';
+this.parentNode.insertBefore(input, this);
+input.focus();
+});
+
+// Load the document
+loadOrCreateDocument();
+
+// Rest of your existing editor code...
+const languageDropdown = document.getElementById('languageDropdown');
+const languageMenu = document.getElementById('languageMenu');
+const toneDropdown = document.getElementById('toneDropdown');
+const toneMenu = document.getElementById('toneMenu');
+const editorContent = document.getElementById('editorContent');
+const resultContent = document.getElementById('resultContent');
+const errorsCount = document.getElementById('errorsCount');
+const clearModal = document.getElementById('clearModal');
+const cancelClear = document.getElementById('cancelClear');
+const confirmClear = document.getElementById('confirmClear');
+
+let history = [];
+let historyIndex = -1;
+const MAX_HISTORY = 50;
+
+function saveToHistory() {
+const content = editorContent.innerHTML;
+if (history[historyIndex] === content) return;
+
+if (historyIndex < history.length - 1) {
+history = history.slice(0, historyIndex + 1);
+}
+
+history.push(content);
+historyIndex++;
+
+if (history.length > MAX_HISTORY) {
+history.shift();
+historyIndex--;
+}
+}
+
+function debounce(func, wait, immediate) {
+let timeout;
+return function() {
+const context = this, args = arguments;
+const later = function() {
+timeout = null;
+if (!immediate) func.apply(context, args);
+};
+const callNow = immediate && !timeout;
+clearTimeout(timeout);
+timeout = setTimeout(later, wait);
+if (callNow) func.apply(context, args);
+};
+}
+
+let currentErrors = [];
+let currentLanguage = 'en-US';
+let currentTone = 'formal';
+
+languageDropdown.addEventListener('click', function(e) {
+e.stopPropagation();
+languageMenu.classList.toggle('show');
+});
+
+toneDropdown.addEventListener('click', function(e) {
+e.stopPropagation();
+toneMenu.classList.toggle('show');
+});
+
+document.querySelectorAll('#languageMenu .dropdown-item').forEach(item => {
+item.addEventListener('click', function() {
+currentLanguage = this.getAttribute('data-lang');
+languageDropdown.querySelector('span').textContent = currentLanguage;
+languageMenu.classList.remove('show');
+checkForErrors();
+});
+});
+
+document.querySelectorAll('#toneMenu .dropdown-item').forEach(item => {
+item.addEventListener('click', function() {
+currentTone = this.getAttribute('data-tone');
+toneDropdown.querySelector('span').textContent = this.querySelector('span:first-child').textContent;
+toneMenu.classList.remove('show');
+checkForErrors();
+});
+});
+
+document.addEventListener('click', function() {
+languageMenu.classList.remove('show');
+statsMenu.classList.remove('show');
+toneMenu.classList.remove('show');
+});
+
+const statsDropdown = document.getElementById('statsDropdown');
+const statsMenu = document.getElementById('statsMenu');
+const statsDisplay = document.getElementById('statsDisplay');
+
+let currentStatType = 'words';
+
+statsDropdown.addEventListener('click', function(e) {
+e.stopPropagation();
+statsMenu.classList.toggle('show');
+});
+
+document.querySelectorAll('#statsMenu .dropdown-item').forEach(item => {
+item.addEventListener('click', function() {
+currentStatType = this.getAttribute('data-stat');
+const value = this.querySelector('span').textContent;
+const label = this.querySelector('span:last-child').textContent;
+
+statsDisplay.textContent = `${value} ${label}`;
+statsMenu.classList.remove('show');
+});
+});
+
+function formatText(command, buttonId, value = null) {
+saveToHistory();
+document.execCommand(command, false, value);
+const button = document.getElementById(buttonId);
+
+if (['bold', 'italic', 'underline', 'strikeThrough'].includes(command)) {
+button.classList.toggle('active');
+} else {
+button.classList.add('active');
+
+if (command === 'justifyLeft' || command === 'justifyCenter' || command === 'justifyRight') {
+['alignLeftButton', 'alignCenterButton', 'alignRightButton'].forEach(id => {
+if (id !== buttonId) {
+document.getElementById(id).classList.remove('active');
+}
+});
+}
+}
+
+editorContent.focus();
+}
+
+document.getElementById('boldButton').addEventListener('click', () => formatText('bold', 'boldButton'));
+document.getElementById('italicButton').addEventListener('click', () => formatText('italic', 'italicButton'));
+document.getElementById('underlineButton').addEventListener('click', () => formatText('underline', 'underlineButton'));
+document.getElementById('strikeButton').addEventListener('click', () => formatText('strikeThrough', 'strikeButton'));
+
+document.getElementById('listUlButton').addEventListener('click', () => formatText('insertUnorderedList', 'listUlButton'));
+document.getElementById('listOlButton').addEventListener('click', () => formatText('insertOrderedList', 'listOlButton'));
+
+document.getElementById('alignLeftButton').addEventListener('click', () => formatText('justifyLeft', 'alignLeftButton'));
+document.getElementById('alignCenterButton').addEventListener('click', () => formatText('justifyCenter', 'alignCenterButton'));
+document.getElementById('alignRightButton').addEventListener('click', () => formatText('justifyRight', 'alignRightButton'));
+
+document.getElementById('blockquoteButton').addEventListener('click', () => {
+formatText('formatBlock', 'blockquoteButton', '<blockquote>');
+});
+
+document.getElementById('codeButton').addEventListener('click', () => {
+formatText('formatBlock', 'codeButton', '<pre>');
+});
+
+document.getElementById('undoButton').addEventListener('click', function() {
+if (historyIndex > 0) {
+historyIndex--;
+editorContent.innerHTML = history[historyIndex];
+updateStats();
+checkForErrors();
+}
+editorContent.focus();
+});
+
+document.getElementById('redoButton').addEventListener('click', function() {
+if (historyIndex < history.length - 1) {
+historyIndex++;
+editorContent.innerHTML = history[historyIndex];
+updateStats();
+checkForErrors();
+}
+editorContent.focus();
+});
+
+document.getElementById('clearButton').addEventListener('click', function() {
+clearModal.classList.add('active');
+});
+
+cancelClear.addEventListener('click', function() {
+clearModal.classList.remove('active');
+});
+
+confirmClear.addEventListener('click', function() {
+saveToHistory();
+editorContent.innerHTML = '';
+updateStats();
+clearErrors();
+clearModal.classList.remove('active');
+});
+
+function updateStats() {
+const text = editorContent.innerText;
+const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+const chars = text.length;
+const paragraphs = text.trim() ? text.split(/\n+/).filter(p => p.trim()).length : 0;
+
+document.querySelector('#statsMenu [data-stat="words"] span:first-child').textContent = words;
+document.querySelector('#statsMenu [data-stat="chars"] span:first-child').textContent = chars;
+document.querySelector('#statsMenu [data-stat="paragraphs"] span:first-child').textContent = paragraphs;
+
+let displayValue, displayLabel;
+switch(currentStatType) {
+case 'words':
+displayValue = words;
+displayLabel = 'Words';
+break;
+case 'chars':
+displayValue = chars;
+displayLabel = 'Characters';
+break;
+case 'paragraphs':
+displayValue = paragraphs;
+displayLabel = 'Paragraphs';
+break;
+default:
+displayValue = words;
+displayLabel = 'Words';
+}
+
+statsDisplay.textContent = `${displayValue} ${displayLabel}`;
+}
+
+function checkForErrors() {
+clearErrors();
+const text = editorContent.innerText;
+checkDoubleSpaces(text);
+checkPunctuation(text);
+checkCapitalization(text);
+checkRegionalSpellings(text);
+checkQuestionMarks(text);
+checkCommonGrammarErrors(text);
+checkPassiveVoice(text);
+checkRepeatedWords(text);
+checkContractions(text);
+checkApostrophes(text);
+errorsCount.textContent = currentErrors.length;
+updateSuggestionsPanel();
+}
+
+function clearErrors() {
+document.querySelectorAll('.error-highlight').forEach(el => {
+const parent = el.parentNode;
+while (el.firstChild) {
+parent.insertBefore(el.firstChild, el);
+}
+parent.removeChild(el);
+parent.normalize();
+});
+currentErrors = [];
+errorsCount.textContent = '0';
+updateSuggestionsPanel();
+}
+
+function checkDoubleSpaces(text) {
+const doubleSpaceRegex = / {2,}/g;
+let match;
+while ((match = doubleSpaceRegex.exec(text)) !== null) {
+const startPos = match.index;
+const endPos = startPos + match[0].length;
+addError({
+type: 'doublespace',
+text: match[0],
+start: startPos,
+end: endPos,
+message: 'Double space detected',
+suggestion: ' '
+});
+}
+}
+
+function checkPunctuation(text) {
+const punctuationRegex = /[.,!?;:]([^\s])/g;
+let match;
+
+while ((match = punctuationRegex.exec(text)) !== null) {
+const startPos = match.index;
+const endPos = startPos + match[0].length;
+
+addError({
+type: 'punctuation',
+text: match[0],
+start: startPos,
+end: endPos,
+message: 'Missing space after punctuation',
+suggestion: match[0][0] + ' ' + match[1]
+});
+}
+}
+
+function checkQuestionMarks(text) {
+const questionWords = ['who', 'what', 'when', 'where', 'why', 'how', 'which', 'whose', 'whom', 
+'is', 'are', 'was', 'were', 'do', 'does', 'did', 'can', 'could', 
+'will', 'would', 'should', 'may', 'might', 'must', 'shall'];
+    
+const sentences = text.split(/(?<=[.!?])\s+/);
+    
+sentences.forEach(sentence => {
+const trimmed = sentence.trim();
+if (!trimmed) return;
+    
+const firstWord = trimmed.split(/\s+/)[0].toLowerCase().replace(/[^a-z']/g, '');
+const isQuestion = questionWords.includes(firstWord) || 
+(trimmed.startsWith('"') && questionWords.includes(trimmed.slice(1).split(/\s+/)[0].toLowerCase().replace(/[^a-z']/g, '')));
+    
+if (isQuestion && !trimmed.endsWith('?')) {
+const startPos = text.indexOf(trimmed);
+const endPos = startPos + trimmed.length;
+const cleanText = trimmed.replace(/[.!?]+$/, '');
+        
+addError({
+type: 'punctuation',
+text: trimmed,
+start: startPos,
+end: endPos,
+message: 'Question should end with a question mark',
+suggestion: cleanText + '?'
+});
+}
+});
+}
+
+function checkCapitalization(text) {
+const sentenceRegex = /(?:^|[.!?]\s)([a-z])/g;
+let match;
+
+while ((match = sentenceRegex.exec(text)) !== null) {
+const startPos = match.index + match[0].length - 1;
+const endPos = startPos + 1;
+
+addError({
+type: 'capitalization',
+text: match[1],
+start: startPos,
+end: endPos,
+message: 'Sentence should start with capital letter',
+suggestion: match[1].toUpperCase()
+});
+}
+
+const properNouns = ['i'];
+properNouns.forEach(word => {
+const regex = new RegExp(`\\b${word}\\b`, 'g');
+while ((match = regex.exec(text)) !== null) {
+const startPos = match.index;
+const endPos = startPos + match[0].length;
+
+addError({
+type: 'capitalization',
+text: match[0],
+start: startPos,
+end: endPos,
+message: 'This word should be capitalized',
+suggestion: word === 'i' ? 'I' : word.charAt(0).toUpperCase() + word.slice(1)
+});
+}
+});
+}
+
+function checkRegionalSpellings(text) {
+const incorrectSpellings = regionalSpellings.getIncorrectSpellings(currentLanguage);
+for (const [incorrect, correct] of Object.entries(incorrectSpellings)) {
+const regex = new RegExp(`\\b${incorrect}\\b`, 'gi');
+let match;
+while ((match = regex.exec(text)) !== null) {
+const startPos = match.index;
+const endPos = startPos + match[0].length;
+addError({
+type: 'spelling',
+text: match[0],
+start: startPos,
+end: endPos,
+message: `This is a regional spelling variation. Consider using the ${currentLanguage} spelling.`,
+suggestion: correct
+});
+}
+}
+}
+
+function checkCommonGrammarErrors(text) {
+const grammarRules = {
+"there their they're": {
+regex: /\b(their|they're)\b(?=\s+(?:are|were|was|is|will|can|should|have|had|has)\b)/gi,
+suggestions: {
+"their": "there",
+"they're": "there"
+},
+message: "Use 'there' when referring to existence or location"
+},
+"your you're": {
+regex: /\byour\b(?=\s+(?:are|were|was|is|will|can|should|have|had|has)\b)/gi,
+suggestions: {
+"your": "you're"
+},
+message: "Use 'you're' when you mean 'you are'"
+},
+"its it's": {
+regex: /\bits\b(?=\s+(?:are|were|was|is|will|can|should|have|had|has)\b)/gi,
+suggestions: {
+"its": "it's"
+},
+message: "Use 'it's' when you mean 'it is' or 'it has'"
+},
+"then than": {
+regex: /\bthen\b(?=\s+(?:I|you|he|she|it|we|they|this|that|these|those)\b)/gi,
+suggestions: {
+"then": "than"
+},
+message: "Use 'than' for comparisons"
+},
+"affect effect": {
+regex: /\baffect\b(?=\s+(?:the|a|an|this|that|these|those)\b)/gi,
+suggestions: {
+"affect": "effect"
+},
+message: "Use 'effect' when referring to a result"
+}
+};
+
+for (const [ruleName, rule] of Object.entries(grammarRules)) {
+let match;
+while ((match = rule.regex.exec(text)) !== null) {
+const word = match[0].toLowerCase();
+if (rule.suggestions[word]) {
+const startPos = match.index;
+const endPos = startPos + match[0].length;
+addError({
+type: 'grammar',
+text: match[0],
+start: startPos,
+end: endPos,
+message: rule.message,
+suggestion: rule.suggestions[word]
+});
+}
+}
+}
+}
+
+function checkPassiveVoice(text) {
+const passiveRegex = /\b(am|are|were|being|is|been|was|be)\s+[a-z]+ed\b/gi;
+let match;
+while ((match = passiveRegex.exec(text)) !== null) {
+const startPos = match.index;
+const endPos = startPos + match[0].length;
+const suggestion = match[0].replace(/\b(am|are|were|being|is|been|was|be)\s+([a-z]+ed)\b/gi, (_, verb, action) => {
+return action.replace(/ed$/, '') + 's'; // Simple transformation (better would be full sentence rewrite)
+});
+addError({
+type: 'grammar',
+text: match[0],
+start: startPos,
+end: endPos,
+message: 'Passive voice detected. Consider using active voice for clearer writing.',
+suggestion: suggestion
+});
+}
+}
+
+function checkRepeatedWords(text) {
+const repeatRegex = /\b(\w+)\s+\1\b/gi;
+let match;
+while ((match = repeatRegex.exec(text)) !== null) {
+const startPos = match.index;
+const endPos = startPos + match[0].length;
+addError({
+type: 'grammar',
+text: match[0],
+start: startPos,
+end: endPos,
+message: 'Repeated word detected',
+suggestion: match[1]
+});
+}
+}
+
+function checkContractions(text) {
+const contractions = {
+"do not": "don't",
+"does not": "doesn't",
+"did not": "didn't",
+"cannot": "can't",
+"could not": "couldn't",
+"will not": "won't",
+"would not": "wouldn't",
+"should not": "shouldn't",
+"is not": "isn't",
+"are not": "aren't",
+"was not": "wasn't",
+"were not": "weren't",
+"has not": "hasn't",
+"have not": "haven't",
+"had not": "hadn't",
+"must not": "mustn't",
+"I am": "I'm",
+"I will": "I'll",
+"I would": "I'd",
+"I have": "I've",
+"you are": "you're",
+"you will": "you'll",
+"you have": "you've",
+"you would": "you'd",
+"you had": "you'd",
+"he is": "he's",
+"he will": "he'll",
+"he has": "he's",
+"he had": "he'd",
+"he would": "he'd",
+"she is": "she's",
+"she will": "she'll",
+"she has": "she's",
+"she had": "she'd",
+"she would": "she'd",
+"it is": "it's",
+"it has": "it's",
+"it will": "it'll",
+"we are": "we're",
+"we will": "we'll",
+"we have": "we've",
+"we had": "we'd",
+"we would": "we'd",
+"they are": "they're",
+"they will": "they'll",
+"they have": "they've",
+"they had": "they'd",
+"they would": "they'd",
+"that is": "that's",
+"that has": "that's",
+"that will": "that'll",
+"there is": "there's",
+"there has": "there's",
+"there will": "there'll",
+"who is": "who's",
+"who has": "who's",
+"who will": "who'll",
+"who would": "who'd",
+"what is": "what's",
+"what has": "what's",
+"what will": "what'll",
+"what would": "what'd",
+"where is": "where's",
+"where has": "where's",
+"where will": "where'll",
+"when is": "when's",
+"when has": "when's",
+"why is": "why's",
+"how is": "how's",
+"how has": "how's",
+"how will": "how'll",
+"let us": "let's",
+"might not": "mightn't",
+"need not": "needn't",
+"would have": "would've",
+"should have": "should've",
+"could have": "could've",
+"might have": "might've",
+"must have": "must've",
+"it would": "it'd",
+"that would": "that'd",
+"there would": "there'd",
+"who had": "who'd",
+"who have": "who've",
+"how would": "how'd",
+"where would": "where'd",
+"why would": "why'd",
+"when would": "when'd",
+"gonna": "going to",
+"wanna": "want to",
+"gotta": "got to",
+"ain't": "is not",
+"ma'am": "madam",
+"y'all": "you all"
+};
+
+if (currentTone === 'formal') {
+// Flag contractions in formal writing and suggest full forms
+for (const [full, contraction] of Object.entries(contractions)) {
+const regex = new RegExp(`\\b${contraction}\\b`, 'gi');
+let match;
+while ((match = regex.exec(text)) !== null) {
+const startPos = match.index;
+const endPos = startPos + match[0].length;
+addError({
+type: 'grammar',
+text: match[0],
+start: startPos,
+end: endPos,
+message: 'Avoid contractions in formal writing',
+suggestion: full
+});
+}
+}
+} else {
+// Flag full forms in informal writing and suggest contractions
+for (const [full, contraction] of Object.entries(contractions)) {
+const regex = new RegExp(`\\b${full}\\b`, 'gi');
+let match;
+while ((match = regex.exec(text)) !== null) {
+const startPos = match.index;
+const endPos = startPos + match[0].length;
+addError({
+type: 'grammar',
+text: match[0],
+start: startPos,
+end: endPos,
+message: 'Consider using contraction for more natural writing',
+suggestion: contraction
+});
+}
+}
+}
+}
+
+function checkApostrophes(text) {
+const apostropheRegex = /\b(\w+)s\b(?=\s+(?:book|car|house|dog|cat|job|friend|boss|teacher|parent|child))/gi;
+let match;
+while ((match = apostropheRegex.exec(text)) !== null) {
+const word = match[1];
+const startPos = match.index;
+const endPos = startPos + match[0].length;
+addError({
+type: 'grammar',
+text: match[0],
+start: startPos,
+end: endPos,
+message: 'Possessive form should use an apostrophe',
+suggestion: `${word}'s`
+});
+}
+}
+
+function addError(error) {
+const isOverlapping = currentErrors.some(existing => 
+(error.start >= existing.start && error.start <= existing.end) ||
+(error.end >= existing.start && error.end <= existing.end)
+);
+
+if (!isOverlapping) {
+currentErrors.push(error);
+highlightErrorInText(error);
+}
+}
+
+function highlightErrorInText(error) {
+const range = document.createRange();
+const walker = document.createTreeWalker(
+editorContent,
+NodeFilter.SHOW_TEXT,
+null,
+false
+);
+
+let startOffset = 0;
+let endOffset = 0;
+let startNode = null;
+let endNode = null;
+
+while (walker.nextNode()) {
+const node = walker.currentNode;
+const nodeLength = node.textContent.length;
+if (!startNode && startOffset + nodeLength > error.start) {
+startNode = node;
+range.setStart(startNode, error.start - startOffset);
+}
+if (!endNode && endOffset + nodeLength > error.end) {
+endNode = node;
+range.setEnd(endNode, error.end - endOffset);
+break;
+}
+startOffset += nodeLength;
+endOffset += nodeLength;
+}
+
+if (startNode && endNode) {
+if (error.type === 'doublespace') {
+const text = startNode.textContent;
+const errorText = text.slice(range.startOffset, range.endOffset);
+const beforeText = text.slice(0, range.startOffset);
+const afterText = text.slice(range.endOffset);
+const parent = startNode.parentNode;
+if (beforeText) parent.insertBefore(document.createTextNode(beforeText), startNode);
+const highlightSpan = document.createElement('span');
+highlightSpan.className = `error-highlight ${error.type}`;
+highlightSpan.textContent = errorText;
+parent.insertBefore(highlightSpan, startNode);
+if (afterText) parent.insertBefore(document.createTextNode(afterText), startNode);
+parent.removeChild(startNode);
+} else {
+const span = document.createElement('span');
+span.className = `error-highlight ${error.type}`;
+try {
+range.surroundContents(span);
+} catch (e) {
+console.warn("Couldn't highlight error:", e);
+}
+}
+}
+}
+
+function updateSuggestionsPanel() {
+if (currentErrors.length === 0) {
+resultContent.innerHTML = `
+<div class="result-empty-state">
+<img src="/assets/images/relaxed.png" alt="High five">
+<p>High five, champ!</p>
+</div>`;
+} else {
+resultContent.innerHTML = '';
+currentErrors.forEach((error, index) => {
+let errorTypeLabel = '';
+switch(error.type) {
+case 'punctuation': errorTypeLabel = 'Punctuation'; break;
+case 'capitalization': errorTypeLabel = 'Capitalization'; break;
+case 'doublespace': errorTypeLabel = 'Double Space'; break;
+case 'grammar': errorTypeLabel = 'Grammar'; break;
+case 'spelling': errorTypeLabel = 'Spelling'; break;
+}
+const errorItem = document.createElement('div');
+errorItem.className = `suggestion-item ${error.type}`;
+errorItem.innerHTML = `
+<div class="suggestion-header">
+<div class="error-indicator" style="background: var(--error-${error.type})"></div>
+<div class="error-label">${errorTypeLabel}</div>
+</div>
+<div class="suggestion-text">"${error.text}"</div>
+<div class="suggestion-instruction">${error.message}</div>
+<div class="suggestion-actions">
+<button class="suggestion-button accept" data-index="${index}">Correct to "${error.suggestion}"</button>
+<button class="suggestion-button ignore" data-index="${index}">Ignore</button>
+</div>`;
+resultContent.appendChild(errorItem);
+});
+
+document.querySelectorAll('.suggestion-button.accept').forEach(button => {
+button.addEventListener('click', function() {
+applySuggestion(parseInt(this.getAttribute('data-index')));
+});
+});
+
+document.querySelectorAll('.suggestion-button.ignore').forEach(button => {
+button.addEventListener('click', function() {
+ignoreSuggestion(parseInt(this.getAttribute('data-index')));
+});
+});
+}
+}
+
+function applySuggestion(index) {
+saveToHistory();
+const error = currentErrors[index];
+
+// Clear existing highlights first
+clearErrors();
+
+// Work with text nodes directly
+const textNodes = [];
+const walker = document.createTreeWalker(
+editorContent,
+NodeFilter.SHOW_TEXT,
+null,
+false
+);
+
+let node;
+let totalLength = 0;
+while (node = walker.nextNode()) {
+textNodes.push({
+node: node,
+start: totalLength,
+end: totalLength + node.length,
+length: node.length
+});
+totalLength += node.length;
+}
+
+// Find the nodes containing the error
+let startNode, endNode, startOffset, endOffset;
+for (const tn of textNodes) {
+if (!startNode && error.start < tn.end) {
+startNode = tn.node;
+startOffset = error.start - tn.start;
+}
+if (!endNode && error.end <= tn.end) {
+endNode = tn.node;
+endOffset = error.end - tn.start;
+break;
+}
+}
+
+if (startNode && endNode) {
+const range = document.createRange();
+range.setStart(startNode, startOffset);
+range.setEnd(endNode, endOffset);
+
+// Delete the old content
+range.deleteContents();
+
+// Insert the corrected text
+range.insertNode(document.createTextNode(error.suggestion));
+
+// Normalize the DOM
+editorContent.normalize();
+}
+
+// Update state
+currentErrors.splice(index, 1);
+errorsCount.textContent = currentErrors.length;
+updateSuggestionsPanel();
+
+// Recheck for errors
+setTimeout(() => {
+checkForErrors();
+updateStats();
+}, 50);
+}
+
+function ignoreSuggestion(index) {
+currentErrors.splice(index, 1);
+errorsCount.textContent = currentErrors.length;
+updateSuggestionsPanel();
+}
+
+editorContent.addEventListener('input', debounce(function() {
+saveToHistory();
+updateStats();
+checkForErrors();
+saveDocument();
+}, 500));
+
+editorContent.addEventListener('paste', function(e) {
+e.preventDefault();
+const text = (e.clipboardData || window.clipboardData).getData('text');
+document.execCommand('insertText', false, text);
+setTimeout(() => {
+saveToHistory();
+updateStats();
+checkForErrors();
+saveDocument();
+}, 0);
+});
+
+saveToHistory();
+updateStats();
+});
+</script>
+</body>
+</html>
