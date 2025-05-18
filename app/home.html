@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Outparse</title>
+<meta name="author" content="Gbemisola Oyeniyi">
+<meta name="theme-color" content="##111b9d">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
 <link rel="license" href="https://www.gnu.org/licenses/agpl-3.0.html">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -142,6 +148,101 @@ background-color: white;
 margin: 0 auto;
 padding: 4rem 2rem;
 width: 100%;
+}
+
+.document-controls {
+display: flex;
+flex-wrap: wrap;
+gap: 1rem;
+margin-bottom: 2rem;
+align-items: center;
+}
+
+.search-container {
+flex: 1;
+min-width: 250px;
+display: flex;
+position: relative;
+}
+
+.search-input {
+width: 100%;
+padding: 0.75rem 1rem;
+padding-right: 3rem;
+border: 1px solid var(--color-gray);
+border-radius: var(--radius-sm);
+font-family: inherit;
+transition: var(--transition);
+}
+
+.search-input:focus {
+outline: none;
+border-color: var(--color-primary);
+box-shadow: var(--shadow-sm);
+}
+
+.search-button {
+position: absolute;
+right: 0.5rem;
+top: 50%;
+transform: translateY(-50%);
+background: none;
+border: none;
+cursor: pointer;
+padding: 0.5rem;
+display: flex;
+align-items: center;
+gap: 0.25rem;
+color: var(--color-secondary);
+}
+
+.filter-button, .sort-button {
+padding: 0.75rem 1rem;
+background: var(--color-lighter);
+border: 1px solid var(--color-gray);
+border-radius: var(--radius-sm);
+cursor: pointer;
+transition: var(--transition);
+display: flex;
+align-items: center;
+gap: 0.5rem;
+}
+
+.filter-button:hover, .sort-button:hover {
+background: var(--color-light);
+}
+
+.filter-menu, .sort-menu {
+position: absolute;
+background: var(--color-white);
+box-shadow: var(--shadow-md);
+border-radius: var(--radius-sm);
+padding: 0.5rem;
+z-index: 10;
+display: none;
+width: 200px;
+right: 0;
+margin-top: 0.5rem;
+}
+
+.filter-menu button, .sort-menu button {
+display: block;
+width: 100%;
+padding: 0.5rem;
+text-align: left;
+background: none;
+border: none;
+cursor: pointer;
+transition: var(--transition);
+border-radius: var(--radius-sm);
+}
+
+.filter-menu button:hover, .sort-menu button:hover {
+background: var(--color-light);
+}
+
+.filter-options, .sort-options {
+position: relative;
 }
 
 .documents-grid {
@@ -500,6 +601,20 @@ font-size: 1.5rem;
 .documents-grid {
 grid-template-columns: 1fr;
 }
+
+.document-controls {
+flex-direction: column;
+align-items: stretch;
+}
+
+.search-container {
+min-width: 100%;
+}
+
+.filter-button, .sort-button {
+width: 100%;
+justify-content: center;
+}
 }
 </style>
 </head>
@@ -510,35 +625,21 @@ grid-template-columns: 1fr;
 <div class="nav-button">
 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-<polyline points="14 2 14 8 20 8" />
-<polyline points="9 15 11 17 15 13" />
-</svg>
-<span>Documents</span>
-</div>
-<div class="nav-button">
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
-stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 <path d="M4 4h5l2 3h9a2 2 0 0 1 2 2v1H2V6a2 2 0 0 1 2-2z" />
 <path d="M2 10h20v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z" />
 </svg>
-<span>Downloads</span>
-</div>
+<span>Docs</span>
+</div>  
+
 <div class="nav-button">
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
-stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-<line x1="4" y1="21" x2="4" y2="14" />
-<line x1="4" y1="10" x2="4" y2="3" />
-<line x1="12" y1="21" x2="12" y2="12" />
-<line x1="12" y1="8" x2="12" y2="3" />
-<line x1="20" y1="21" x2="20" y2="16" />
-<line x1="20" y1="12" x2="20" y2="3" />
-<circle cx="4" cy="12" r="2" />
-<circle cx="12" cy="10" r="2" />
-<circle cx="20" cy="14" r="2" />
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+  <circle cx="12" cy="7" r="4" />
 </svg>
-<span>Settings</span>
+<span>Account</span>
 </div>
+
 </div>
 </header>
 
@@ -555,6 +656,48 @@ stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 </section>
 
 <section class="documents-container">
+<div class="document-controls">
+<div class="search-container">
+<input type="text" class="search-input" id="search-input" placeholder="Search documents...">
+<button class="search-button" id="search-button">
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+<circle cx="11" cy="11" r="8"/>
+<path d="M21 21l-4.35-4.35"/>
+</svg>
+<span>Search</span>
+</button>
+</div>
+<div class="filter-options">
+<button class="filter-button" id="filter-button">
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+<path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/>
+</svg>
+<span>Filter</span>
+</button>
+<div class="filter-menu" id="filter-menu">
+<button data-filter="all">All Documents</button>
+<button data-filter="recent">Recent (Last 7 days)</button>
+<button data-filter="month">This Month</button>
+<button data-filter="older">Older</button>
+</div>
+</div>
+<div class="sort-options">
+<button class="sort-button" id="sort-button">
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+<path d="M3 6h18M6 12h12M10 18h8"/>
+</svg>
+<span>Sort</span>
+</button>
+<div class="sort-menu" id="sort-menu">
+<button data-sort="newest">Newest First</button>
+<button data-sort="oldest">Oldest First</button>
+<button data-sort="name-asc">Name (A-Z)</button>
+<button data-sort="name-desc">Name (Z-A)</button>
+<button data-sort="updated">Last Updated</button>
+</div>
+</div>
+</div>
+
 <div class="documents-grid" id="documents-grid">
 <div class="create-doc" id="create-doc">
 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
@@ -700,7 +843,7 @@ stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="r
 </a>
 </div>
 <div class="copyright">
-&copy; 2025 Outparse. Created by <a href="https://itsgbemi.github.io" target="_blank">Gbemisola Oyeniyi</a>. This open source project is licensed under the <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank">GNU Affero General Public License v3.0</a>. All Rights Reserved.
+&copy; <script>document.write(new Date().getFullYear())</script> Outparse. Created by <a href="https://gbemisolaoyeniyi.com" target="_blank" rel="author">Gbemisola Oyeniyi</a>. This open source project is licensed under the <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="license">GNU Affero General Public License v3.0</a>. All Rights Reserved.
 </div>
 </footer>
 
@@ -780,6 +923,9 @@ return `${month} ${day}${daySuffix}, ${year}`;
 let documents = [];
 let currentPage = 1;
 const docsPerPage = 9;
+let currentFilter = 'all';
+let currentSort = 'newest';
+let currentSearchTerm = '';
 
 function loadDocuments() {
 const savedDocs = localStorage.getItem('outparse-documents');
@@ -797,14 +943,71 @@ content: ''
 ];
 saveDocuments();
 }
-renderDocuments();
+applyFiltersAndSort();
 }
 
 function saveDocuments() {
 localStorage.setItem('outparse-documents', JSON.stringify(documents));
 }
 
-function renderDocuments() {
+function applyFiltersAndSort() {
+let filteredDocs = [...documents];
+
+// Apply search filter
+if (currentSearchTerm) {
+const searchTerm = currentSearchTerm.toLowerCase();
+filteredDocs = filteredDocs.filter(doc => 
+doc.name.toLowerCase().includes(searchTerm) || 
+doc.content.toLowerCase().includes(searchTerm)
+);
+}
+
+// Apply time filter
+const now = new Date();
+switch (currentFilter) {
+case 'recent':
+filteredDocs = filteredDocs.filter(doc => {
+const docDate = new Date(doc.created);
+return (now - docDate) <= 7 * 24 * 60 * 60 * 1000;
+});
+break;
+case 'month':
+filteredDocs = filteredDocs.filter(doc => {
+const docDate = new Date(doc.created);
+return now.getMonth() === docDate.getMonth() && now.getFullYear() === docDate.getFullYear();
+});
+break;
+case 'older':
+filteredDocs = filteredDocs.filter(doc => {
+const docDate = new Date(doc.created);
+return (now - docDate) > 30 * 24 * 60 * 60 * 1000;
+});
+break;
+}
+
+// Apply sorting
+switch (currentSort) {
+case 'newest':
+filteredDocs.sort((a, b) => new Date(b.created) - new Date(a.created));
+break;
+case 'oldest':
+filteredDocs.sort((a, b) => new Date(a.created) - new Date(b.created));
+break;
+case 'name-asc':
+filteredDocs.sort((a, b) => a.name.localeCompare(b.name));
+break;
+case 'name-desc':
+filteredDocs.sort((a, b) => b.name.localeCompare(a.name));
+break;
+case 'updated':
+filteredDocs.sort((a, b) => new Date(b.lastEdited) - new Date(a.lastEdited));
+break;
+}
+
+renderDocuments(filteredDocs);
+}
+
+function renderDocuments(docs = documents) {
 const grid = document.getElementById('documents-grid');
 grid.innerHTML = '';
 
@@ -823,7 +1026,7 @@ viewBox="0 0 24 24">
 createDoc.addEventListener('click', showNewDocModal);
 grid.appendChild(createDoc);
 
-const totalPages = Math.ceil(documents.length / docsPerPage);
+const totalPages = Math.ceil(docs.length / docsPerPage);
 document.getElementById('total-pages').textContent = totalPages;
 
 if (currentPage > totalPages && totalPages > 0) {
@@ -839,10 +1042,10 @@ document.getElementById('prev-page').title = currentPage === 1 ? 'You are on the
 document.getElementById('next-page').title = currentPage === totalPages ? 'You are on the last page' : 'Next page';
 
 const startIdx = (currentPage - 1) * docsPerPage;
-const endIdx = Math.min(startIdx + docsPerPage, documents.length);
+const endIdx = Math.min(startIdx + docsPerPage, docs.length);
 
 for (let i = startIdx; i < endIdx; i++) {
-const doc = documents[i];
+const doc = docs[i];
 const docCard = document.createElement('div');
 docCard.className = 'doc-card';
 docCard.innerHTML = `
@@ -917,7 +1120,7 @@ guestMode: guestMode
 documents.unshift(doc);
 saveDocuments();
 currentPage = 1;
-renderDocuments();
+applyFiltersAndSort();
 editDocument(docId);
 hideModal('new-doc-modal');
 }
@@ -959,7 +1162,7 @@ if (doc) {
 doc.name = newName;
 doc.lastEdited = new Date().toISOString();
 saveDocuments();
-renderDocuments();
+applyFiltersAndSort();
 }
 }
 hideModal('rename-modal');
@@ -989,7 +1192,7 @@ currentPage = totalPages;
 currentPage = 1;
 }
 
-renderDocuments();
+applyFiltersAndSort();
 hideModal('delete-modal');
 }
 
@@ -1005,7 +1208,7 @@ function setupPagination() {
 document.getElementById('prev-page').addEventListener('click', () => {
 if (currentPage > 1) {
 currentPage--;
-renderDocuments();
+applyFiltersAndSort();
 document.getElementById('current-page').textContent = currentPage;
 }
 });
@@ -1014,7 +1217,7 @@ document.getElementById('next-page').addEventListener('click', () => {
 const totalPages = Math.ceil(documents.length / docsPerPage);
 if (currentPage < totalPages) {
 currentPage++;
-renderDocuments();
+applyFiltersAndSort();
 document.getElementById('current-page').textContent = currentPage;
 }
 });
@@ -1032,7 +1235,7 @@ showModal('page-modal');
 
 currentPage = newPage;
 document.getElementById('current-page').textContent = currentPage;
-renderDocuments();
+applyFiltersAndSort();
 });
 
 document.getElementById('current-page').addEventListener('keydown', (e) => {
@@ -1043,24 +1246,86 @@ document.getElementById('current-page').blur();
 });
 }
 
-window.addEventListener('click', (e) => {
-if (e.target.classList.contains('modal')) {
-e.target.style.display = 'none';
+function setupSearchAndFilters() {
+// Search functionality
+const searchInput = document.getElementById('search-input');
+const searchButton = document.getElementById('search-button');
+
+const performSearch = () => {
+currentSearchTerm = searchInput.value.trim();
+currentPage = 1;
+applyFiltersAndSort();
+};
+
+searchButton.addEventListener('click', performSearch);
+searchInput.addEventListener('keyup', (e) => {
+if (e.key === 'Enter') {
+performSearch();
 }
 });
 
+// Filter functionality
+const filterButton = document.getElementById('filter-button');
+const filterMenu = document.getElementById('filter-menu');
+
+filterButton.addEventListener('click', () => {
+filterMenu.style.display = filterMenu.style.display === 'block' ? 'none' : 'block';
+document.getElementById('sort-menu').style.display = 'none';
+});
+
+filterMenu.querySelectorAll('button').forEach(button => {
+button.addEventListener('click', () => {
+currentFilter = button.dataset.filter;
+filterButton.querySelector('span').textContent = button.textContent;
+filterMenu.style.display = 'none';
+currentPage = 1;
+applyFiltersAndSort();
+});
+});
+
+// Sort functionality
+const sortButton = document.getElementById('sort-button');
+const sortMenu = document.getElementById('sort-menu');
+
+sortButton.addEventListener('click', () => {
+sortMenu.style.display = sortMenu.style.display === 'block' ? 'none' : 'block';
+document.getElementById('filter-menu').style.display = 'none';
+});
+
+sortMenu.querySelectorAll('button').forEach(button => {
+button.addEventListener('click', () => {
+currentSort = button.dataset.sort;
+sortButton.querySelector('span').textContent = button.textContent;
+sortMenu.style.display = 'none';
+currentPage = 1;
+applyFiltersAndSort();
+});
+});
+
+// Close menus when clicking outside
 window.addEventListener('click', (e) => {
+if (!e.target.closest('.filter-options') && !e.target.closest('.sort-options')) {
+filterMenu.style.display = 'none';
+sortMenu.style.display = 'none';
+}
+
+if (e.target.classList.contains('modal')) {
+e.target.style.display = 'none';
+}
+
 if (!e.target.closest('.doc-actions')) {
 document.querySelectorAll('.action-menu').forEach(menu => {
 menu.style.display = 'none';
 });
 }
 });
+}
 
 function init() {
 updateGreeting();
 loadDocuments();
 setupPagination();
+setupSearchAndFilters();
 
 const displayName = localStorage.getItem('outparse-display-name') || 'Curious Cat';
 document.getElementById('display-name').textContent = displayName;
