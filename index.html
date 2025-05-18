@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Outparse - Improve Your Writing</title>
+<meta name="author" content="Gbemisola Oyeniyi">
+<meta name="theme-color" content="##111b9d">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
 <link rel="license" href="https://www.gnu.org/licenses/agpl-3.0.html">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -165,6 +171,16 @@ flex-wrap: wrap;
 margin-top: 1rem;
 }
 
+.nav-button {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 0.5rem;
+cursor: pointer;
+width: 80px;
+transition: var(--transition);
+}
+
 .hero {
 background: white;
 display: flex;
@@ -204,7 +220,7 @@ border-radius: var(--radius-sm);
 cursor: pointer;
 transition: var(--transition);
 text-decoration: none;
-font-weight: 500;
+font-weight: 700;
 }
 
 .btn:hover {
@@ -416,6 +432,10 @@ opacity: 0.9;
 }
 
 .cancel-btn {
+color: red;
+font-size: 1rem;
+padding: 0.75rem 1.5rem;
+font-weight: 700;
 background: var(--color-light);
 }
 
@@ -650,13 +670,13 @@ max-height: 80vh;
 <div class="modal-content">
 <h2>✨ Choose how you'd like to start</h2>
 <div class="modal-options">
-<a href="/app/home.html" class="modal-option">
+<a href="/app/index.html" class="modal-option">
 <h3>Continue as a Guest</h3>
 <p>No sign-up. Your writing stays on your device and clears if you reset your browser. Great for private or one-time work.</p>
 </a>
-<a href="https://outparse-app.github.io" class="modal-option">
-<h3>Sign Up or Sign In</h3>
-<p>Create an account to save your writing and preferences on our cloud. Great if you want to continue writing later across different browsers or devices.</p>
+<a href="https://outparse-app.github.io" target="_blank" class="modal-option">
+<h3>Create an account</h3>
+<p>Sign up to save your work on our cloud. Great if you want to continue writing later across different browsers or devices.</p>
 </a>
 </div>
 <div class="modal-buttons">
@@ -701,7 +721,7 @@ max-height: 80vh;
 </a>
 </div>
 <div class="copyright">
-&copy; <script>document.write(new Date().getFullYear())</script> Outparse. Created by <a href="https://gbemisolaoyeniyi.com" target="_blank">Gbemisola Oyeniyi</a>. This open source project is licensed under the <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank">GNU Affero General Public License v3.0</a>. All Rights Reserved.
+&copy; <script>document.write(new Date().getFullYear())</script> Outparse. Created by <a href="https://gbemisolaoyeniyi.com" target="_blank" rel="author">Gbemisola Oyeniyi</a>. This open source project is licensed under the <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="license">GNU Affero General Public License v3.0</a>. All Rights Reserved.
 </div>
 </footer>
 
