@@ -6,28 +6,35 @@
 <title>Outparse - Improve Your Writing</title>
 <meta name="author" content="Gbemisola Oyeniyi">
 <meta name="theme-color" content="##111b9d">
+<meta name="description" content="Free, open-source writing assistant that helps you write more clearly and confidently">
+<meta name="keywords" content="writing assistant, grammar checker, open source, Outparse, Gbemisola Oyeniyi">
+<meta name="robots" content="index, follow">
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
 <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
 <link rel="license" href="https://www.gnu.org/licenses/agpl-3.0.html">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&family=Lexend:wght@400;500;700&family=Montserrat:wght@400;500;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
+--primary-color: #2563eb;
+--accent: rgba(255, 224, 178, 1);
+--text-color: #1f2937;
+--white: #ffffff;
+--mobile-menu-width: 280px;
+--transition-speed: 0.3s;
 --color-primary: #333;
 --color-secondary: #666;
 --color-light: #f5f5f5;
 --color-lighter: #f9f9f9;
---color-white: #fff;
 --color-gray: #ccc;
 --color-dark-gray: #e0e0e0;
---shadow-sm: 2px 2px 0 rgba(0, 0, 0, 0.1);
---shadow-md: 4px 4px 0 rgba(0, 0, 0, 0.15);
+--shadow-sm: 2px 2px 0 rgba(37, 99, 235, 0.3);
+--shadow-md: 4px 4px 0 rgba(37, 99, 235, 0.5);
 --radius-sm: 4px;
 --radius-md: 8px;
 --transition: all 0.2s ease-in-out;
 --max-width: 1200px;
-
 --text-xs: 0.75rem; 
 --text-sm: 0.875rem;
 --text-base: 1rem;  
@@ -38,22 +45,44 @@
 --text-3xl: 2.25rem;
 --text-4xl: 3rem; 
 --text-5xl: 3.75rem;  
-
 --leading-none: 1;
 --leading-tight: 1.25;
 --leading-snug: 1.375;
 --leading-normal: 1.5;
 --leading-relaxed: 1.625;
 --leading-loose: 2;
-
+--letter-spacing-tight: -0.05em;
+--letter-spacing-normal: 0;
+--letter-spacing-wide: 0.05em;
+--letter-spacing-wider: 0.1em;
+--letter-spacing-widest: 0.2em;
+--current-letter-spacing: var(--letter-spacing-normal);
 --gradient: linear-gradient(
-to bottom right,
-rgba(245, 245, 245, 1) 0%,
-rgba(235, 235, 235, 1) 40%,
-rgba(220, 220, 220, 1) 70%,
-rgba(205, 205, 205, 1) 85%,
-rgba(190, 190, 190, 1) 100%
+  to bottom right,
+  rgba(180, 200, 230, 1) 0%,
+  rgba(200, 215, 240, 0.9) 40%,
+  rgba(220, 230, 250, 0.9) 70%,
+  rgba(235, 240, 255, 1) 85%,
+  rgba(245, 245, 255, 1) 100%
 );
+--gradient-dark: linear-gradient(
+to bottom right,
+rgba(10, 25, 60, 1) 0%,
+rgba(15, 35, 80, 0.9) 40%,
+rgba(20, 45, 100, 0.9) 70%,
+rgba(25, 55, 120, 1) 85%,
+rgba(30, 65, 140, 1) 100%
+);
+--current-font: 'Noto Sans', sans-serif;
+--current-leading: var(--leading-relaxed);
+--current-text-size: var(--text-base);
+}
+
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+letter-spacing: var(--current-letter-spacing);
 }
 
 html {
@@ -61,10 +90,222 @@ scroll-behavior: smooth;
 font-size: 100%; 
 }
 
-* {
-margin: 0;
-padding: 0;
-box-sizing: border-box;
+body {
+font-family: var(--current-font);
+color: var(--color-primary);
+line-height: var(--current-leading);
+transition: var(--transition);
+max-width: 1440px;
+width: 100%;
+margin: 0 auto;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+}
+
+body.dark-mode {
+background-color: #222;
+color: #f0f0f0;
+--text-color: #f0f0f0;
+--color-primary: #f0f0f0;
+--color-secondary: #ccc;
+--color-light: #333;
+--color-lighter: #444;
+--white: #222;
+--color-gray: #555;
+--color-dark-gray: #666;
+}
+
+header {
+width: 100%; 
+background-color: var(--white);
+margin: 0 auto;
+padding: 0.5rem;
+}
+
+.header-container {
+display: flex;
+justify-content: space-between;
+align-items: center;
+max-width: 1200px;
+margin: 0 auto;
+}
+
+.logo {
+height: auto;
+max-width: 150px;
+}
+
+.nav {
+display: flex;
+align-items: center;
+gap: 2rem;
+}
+
+.nav-list {
+display: flex;
+list-style: none;
+gap: 1.5rem;
+}
+
+.nav-link {
+text-decoration: none;
+color: var(--text-color);
+font-weight: 500;
+transition: color var(--transition-speed) ease;
+}
+
+.nav-link:hover {
+color: var(--primary-color);
+}
+
+.cta-button, .mobile-cta-button {
+background: var(--primary-color);
+color: white;
+box-shadow: var(--shadow-md);
+border: 2px solid var(--primary-color);
+padding: 0.5rem 1rem;
+border-radius: 4px;
+font-weight: 700;
+cursor: pointer;
+transition: var(--transition);
+}
+
+.cta-button:hover, .mobile-cta-button:hover {
+background: transparent;  
+color: var(--primary-color);
+}
+
+.mobile-menu-button {
+display: none;
+background: none;
+border: none;
+border-radius: 4px;
+color: var(--text-color);
+cursor: pointer;
+padding: 0.25rem 0.5rem;
+}
+
+.mobile-menu-icon {
+width: 24px;
+height: 24px;
+}
+
+.mobile-menu {
+position: fixed;
+top: 0;
+right: 0;
+bottom: 0;
+width: var(--mobile-menu-width);
+background-color: var(--white);
+box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+transform: translateX(100%);
+transition: transform var(--transition-speed) ease;
+z-index: 200;
+padding: 2rem;
+}
+
+.mobile-menu.active {
+transform: translateX(0);
+}
+
+.mobile-nav-list {
+list-style: none;
+display: flex;
+flex-direction: column;
+gap: 1.5rem;
+margin-top: 2rem;
+}
+
+.mobile-nav-link {
+text-decoration: none;
+color: var(--text-color);
+font-size: 1.125rem;
+font-weight: 500;
+display: flex;
+align-items: center;
+gap: 0.75rem;
+}
+
+.mobile-nav-link:hover {
+color: var(--primary-color);
+}
+
+.mobile-nav-icon {
+width: 20px;
+height: 20px;
+}
+
+.overlay {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: rgba(0, 0, 0, 0.5);
+z-index: 100;
+opacity: 0;
+visibility: hidden;
+transition: opacity var(--transition-speed) ease, visibility var(--transition-speed) ease;
+}
+
+.overlay.active {
+opacity: 1;
+visibility: visible;
+}
+
+.mobile-header-actions {
+display: none;
+gap: 0.5rem;
+align-items: center;
+}
+
+.skip-link {
+position: absolute;
+left: -9999px;
+top: 0;
+background: var(--color-primary);
+color: white;
+padding: 1rem;
+z-index: 1000;
+}
+
+.skip-link:focus {
+left: 0;
+}
+
+.accessibility-btn {
+position: fixed;
+bottom: 20px;
+left: 50%;
+transform: translateX(-50%);
+z-index: 100;
+border: 2px solid var(--primary-color);
+background: var(--color-lighter);
+color: var(--color-primary);
+padding: 0.75rem 1.5rem;
+border-radius: 50px;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+transition: all 0.3s ease;
+gap: 0.5rem;
+font-weight: 500;
+}
+
+.accessibility-btn:hover {
+transform: translateX(-50%) scale(1.05);
+}
+
+.accessibility-btn svg {
+width: 20px;
+height: 20px;
+}
+
+main {
+flex: 1;
 }
 
 h1 {
@@ -86,8 +327,8 @@ font-weight: 700;
 }
 
 p {
-font-size: var(--text-base);
-line-height: var(--leading-relaxed);
+font-size: var(--current-text-size);
+line-height: var(--current-leading);
 max-width: 65ch;
 }
 
@@ -105,7 +346,7 @@ outline: none;
 
 a:hover,
 a:focus {
-color: var(--color-focus);
+color: var(--primary-color);
 text-decoration-thickness: 2px;
 }
 
@@ -115,70 +356,9 @@ text-decoration-thickness: 2px;
 }
 
 a:focus-visible {
-outline: 2px solid var(--color-focus);
+outline: 2px solid var(--primary-color);
 outline-offset: 2px;
 border-radius: var(--radius-sm);
-}
-
-body {
-display: flex;
-flex-direction: column;
-min-height: 100vh;
-background-color: var(--color-white);
-color: var(--color-primary);
-font-family: 'Noto Sans', sans-serif;
-line-height: 1.6;
-transition: var(--transition);
-max-width: 1440px;
-width: 100%;
-margin: 0 auto;
-}
-
-.skip-link {
-position: absolute;
-left: -9999px;
-top: 0;
-background: var(--color-primary);
-color: white;
-padding: 1rem;
-z-index: 1000;
-}
-
-.skip-link:focus {
-left: 0;
-}
-
-main {
-flex: 1;
-}
-
-header {
-padding: 1rem;
-text-align: center;
-background: var(--gradient);
-}
-
-.logo {
-max-width: 150px;
-height: auto;
-}
-
-.nav-buttons {
-display: flex;
-justify-content: center;
-gap: 1rem;
-flex-wrap: wrap;
-margin-top: 1rem;
-}
-
-.nav-button {
-display: flex;
-flex-direction: column;
-align-items: center;
-gap: 0.5rem;
-cursor: pointer;
-width: 80px;
-transition: var(--transition);
 }
 
 .hero {
@@ -192,6 +372,10 @@ margin: 0 auto;
 max-width: var(--max-width);
 width: 100%;
 text-align: center;
+}
+
+body.dark-mode .hero {
+background: #222;
 }
 
 .pre-heading {
@@ -213,7 +397,7 @@ margin-bottom: 2rem;
 
 .btn {
 padding: 0.75rem 1.5rem;
-background: var(--color-primary);
+background: var(--primary-color);
 color: white;
 border: none;
 border-radius: var(--radius-sm);
@@ -221,6 +405,7 @@ cursor: pointer;
 transition: var(--transition);
 text-decoration: none;
 font-weight: 700;
+box-shadow: var(--shadow-md);
 }
 
 .btn:hover {
@@ -369,7 +554,7 @@ background: rgba(0,0,0,0.5);
 display: flex;
 justify-content: center;
 align-items: center;
-z-index: 100;
+z-index: 300;
 display: none;
 overflow-y: auto;
 }
@@ -379,7 +564,7 @@ overflow: hidden;
 }
 
 .modal-content {
-background: var(--color-white);
+background: var(--white);
 padding: 2rem 1.5rem;
 border-radius: var(--radius-md);
 max-width: 500px;
@@ -423,8 +608,8 @@ transition: var(--transition);
 }
 
 .confirm-btn {
-background: var(--color-primary);
-color: var(--color-white);
+background: var(--primary-color);
+color: var(--white);
 }
 
 .confirm-btn:hover {
@@ -470,12 +655,164 @@ margin-bottom: 0.5rem;
 color: var(--color-secondary);
 }
 
+.modal-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 1rem;
+}
+
+.close-modal {
+background: none;
+border: none;
+cursor: pointer;
+font-size: 1.5rem;
+color: var(--color-secondary);
+}
+
+.toggle-switch {
+position: relative;
+display: inline-block;
+width: 60px;
+height: 34px;
+margin-left: 1rem;
+}
+
+.toggle-switch input {
+opacity: 0;
+width: 0;
+height: 0;
+}
+
+.toggle-slider {
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: var(--color-gray);
+transition: .4s;
+border-radius: 34px;
+}
+
+.toggle-slider:before {
+position: absolute;
+content: "";
+height: 26px;
+width: 26px;
+left: 4px;
+bottom: 4px;
+background-color: white;
+transition: .4s;
+border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+background-color: var(--primary-color);
+}
+
+input:checked + .toggle-slider:before {
+transform: translateX(26px);
+}
+
+.toggle-container {
+display: flex;
+align-items: center;
+justify-content: space-between;
+width: 100%;
+margin-bottom: 1.5rem;
+}
+
+.option-group {
+margin-bottom: 1.5rem;
+}
+
+.option-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+cursor: pointer;
+padding: 0.5rem 0;
+border-bottom: 1px solid var(--color-gray);
+margin-bottom: 0.5rem;
+}
+
+.option-header h3 {
+margin: 0;
+}
+
+.option-header svg {
+transition: transform 0.3s ease;
+}
+
+.option-header.active svg {
+transform: rotate(180deg);
+}
+
+.option-buttons {
+display: none;
+flex-wrap: wrap;
+gap: 0.5rem;
+padding: 0.5rem 0;
+}
+
+.option-buttons.active {
+display: flex;
+}
+
+.option-btn {
+padding: 0.5rem 1rem;
+background: var(--white);
+color: var(--color-primary);
+box-shadow: var(--shadow-sm);
+border: 1px solid var(--color-gray);
+border-radius: var(--radius-sm);
+cursor: pointer;
+transition: var(--transition);
+}
+
+.option-btn:hover {
+background: var(--color-lighter);
+}
+
+.option-btn.active {
+background: var(--primary-color);
+color: white;
+border-color: var(--white);
+box-shadow: var(--shadow-sm);
+}
+
+.font-btn-noto {
+font-family: 'Noto Sans', sans-serif;
+}
+
+.font-btn-montserrat {
+font-family: 'Montserrat', sans-serif;
+}
+
+.font-btn-lexend {
+font-family: 'Lexend', sans-serif;
+}
+
+.font-btn-segoe {
+font-family: 'Segoe UI', sans-serif;
+}
+
+.font-btn-atkinson {
+font-family: 'Atkinson Hyperlegible', sans-serif;
+}
+
 footer {
 width: 100%;
 background: var(--gradient);
-padding: 3rem 2rem;
+padding: 3rem 2rem 5rem;
 text-align: center;
 margin-top: auto;
+}
+
+body.dark-mode footer {
+background: var(--gradient-dark);
 }
 
 .footer-nav {
@@ -520,6 +857,7 @@ color: var(--color-primary);
 
 .copyright {
 font-size: 0.9rem;
+margin-bottom: 40px;
 color: var(--color-secondary);
 }
 
@@ -534,30 +872,114 @@ transition: var(--transition);
 border-bottom-color: transparent;
 }
 
+@media (max-width: 768px) {
+header {
+padding: 0.5rem 0.25rem;
+}
+.nav, .cta-button {
+display: none;
+}
+.mobile-menu-button {
+display: block;
+}
+.mobile-header-actions {
+display: flex;
+}
+}
+
 @media (max-width: 767px) {
 .modal {
 align-items: flex-end;
 }
-
 .modal-content {
 width: 100%;
 max-height: 80vh;
+}
+.accessibility-btn {
+width: auto;
+padding: 0.75rem 1rem;
+font-size: 0.875rem;
 }
 }
 </style>
 </head>
 <body>
 <a href="#main-content" class="skip-link">Skip to main content</a>
+<button class="accessibility-btn" aria-label="Accessibility Options">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+<path d="M12 2a2 2 0 110 4 2 2 0 010-4zm8 5H4a1 1 0 000 2h7v3.5l-3.1 7.35a1 1 0 001.8.8L12 14.62l2.3 6.03a1 1 0 001.8-.8L13 12.5V9h7a1 1 0 000-2z"/>
+</svg>
+Accessibility
+</button>
+
 <header>
-<a href="/"><img src="/assets/images/outparse-mono.svg" alt="Outparse Logo" class="logo"></a>
+<div class="header-container">
+<a href="/">
+<img src="/assets/images/logo.svg" alt="Company Logo" class="logo" id="siteLogo">
+</a>
+
+<div class="nav">
+<ul class="nav-list">
+<li><a href="#" class="nav-link">Features</a></li>
+<li><a href="#" class="nav-link">Coming Soon</a></li>
+<li><a href="#" class="nav-link">Feedback</a></li>
+</ul>
+</div>
+
+<button class="cta-button" id="headerCtaBtn">Get started</button>
+
+<div class="mobile-header-actions">
+<button class="mobile-cta-button" id="mobileCtaBtn">Get started</button>
+<button class="mobile-menu-button" aria-label="Open menu">
+<svg class="mobile-menu-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<line x1="14" y1="5" x2="22" y2="5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+<line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+<line x1="5" y1="19" x2="17" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+</svg>
+</button>
+</div>
+</div>
 </header>
+
+<div class="overlay"></div>
+
+<aside class="mobile-menu">
+<button class="mobile-menu-button" aria-label="Close menu" style="box-shadow: var(--shadow-sm)">
+<svg class="mobile-menu-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</button>
+
+<ul class="mobile-nav-list">
+<li><a href="#" class="mobile-nav-link">
+<svg class="mobile-nav-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="11" cy="11" r="8"></circle>
+<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+</svg>
+Features</a></li>
+<li><a href="#" class="mobile-nav-link">
+<svg class="mobile-nav-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M12 20h9"></path>
+<path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+</svg>
+Coming soon</a></li>
+<li><a href="#" class="mobile-nav-link">
+<svg class="mobile-nav-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+<circle cx="9" cy="7" r="4"></circle>
+<path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+<path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+</svg>
+Feedback</a></li>
+</ul>
+</aside>
 
 <main id="main-content" role="main">
 <section class="hero">
 <p class="pre-heading">FREE FOREVER</p>
 <h1>Improve Your Writing</h1>
 <p>Outparse is a free, open source tool that helps you write more clearly and confidently.</p>
-<a href="#" class="btn" id="getStartedBtn">Get started</a>
 </section>
 
 <section class="section">
@@ -674,7 +1096,7 @@ max-height: 80vh;
 <h3>Continue as a Guest</h3>
 <p>No sign-up. Your writing stays on your device and clears if you reset your browser. Great for private or one-time work.</p>
 </a>
-<a href="https://outparse-app.github.io" target="_blank" class="modal-option">
+<a href="https://outparse-app.github.io" class="modal-option">
 <h3>Create an account</h3>
 <p>Sign up to save your work on our cloud. Great if you want to continue writing later across different browsers or devices.</p>
 </a>
@@ -685,11 +1107,104 @@ max-height: 80vh;
 </div>
 </div>
 
+<div class="modal" id="accessibilityModal">
+<div class="modal-content">
+<div class="modal-header">
+<h2>Accessibility Options</h2>
+<button class="close-modal" aria-label="Close modal">&times;</button>
+</div>
+<p class="modal-description">Customize your viewing experience with these accessibility settings. Changes will be applied immediately.</p>
+<div class="modal-options">
+<div class="option-group">
+<div class="option-header" id="mode-header">
+<h3>Switch Mode</h3>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</div>
+<div class="option-buttons" id="mode-options">
+<button class="option-btn" data-value="light">Light</button>
+<button class="option-btn" data-value="dark">Dark</button>
+</div>
+</div>
+<div class="option-group">
+<div class="option-header" id="font-header">
+<h3>Change Font</h3>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</div>
+<div class="option-buttons" id="font-options">
+<button class="option-btn font-btn-noto" data-value="Noto Sans">Noto Sans</button>
+<button class="option-btn font-btn-montserrat" data-value="Montserrat">Montserrat</button>
+<button class="option-btn font-btn-lexend" data-value="Lexend">Lexend</button>
+<button class="option-btn font-btn-segoe" data-value="Segoe UI">Segoe UI</button>
+<button class="option-btn font-btn-atkinson" data-value="Atkinson Hyperlegible">Atkinson</button>
+</div>
+</div>
+<div class="option-group">
+<div class="option-header" id="text-size-header">
+<h3>Text Size</h3>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</div>
+<div class="option-buttons" id="text-size-options">
+<button class="option-btn" data-value="var(--text-sm)">Small</button>
+<button class="option-btn" data-value="var(--text-base)">Medium</button>
+<button class="option-btn" data-value="var(--text-md)">Large</button>
+<button class="option-btn" data-value="var(--text-lg)">X-Large</button>
+</div>
+</div>
+<div class="option-group">
+<div class="option-header" id="line-height-header">
+<h3>Line Height</h3>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</div>
+<div class="option-buttons" id="line-height-options">
+<button class="option-btn" data-value="var(--leading-none)">None</button>
+<button class="option-btn" data-value="var(--leading-tight)">Tight</button>
+<button class="option-btn" data-value="var(--leading-snug)">Snug</button>
+<button class="option-btn" data-value="var(--leading-normal)">Normal</button>
+<button class="option-btn" data-value="var(--leading-relaxed)">Relaxed</button>
+<button class="option-btn" data-value="var(--leading-loose)">Loose</button>
+</div>
+</div>
+<div class="option-group">
+<div class="option-header" id="letter-spacing-header">
+<h3>Letter Spacing</h3>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</div>
+<div class="option-buttons" id="letter-spacing-options">
+<button class="option-btn" data-value="var(--letter-spacing-tight)">Tight</button>
+<button class="option-btn" data-value="var(--letter-spacing-normal)">Normal</button>
+<button class="option-btn" data-value="var(--letter-spacing-wide)">Wide</button>
+<button class="option-btn" data-value="var(--letter-spacing-wider)">Wider</button>
+<button class="option-btn" data-value="var(--letter-spacing-widest)">Widest</button>
+</div>
+</div>
+<div class="option-group">
+<div class="toggle-container">
+<h3>Read Aloud</h3>
+<label class="toggle-switch">
+<input type="checkbox" id="readAloudToggle">
+<span class="toggle-slider"></span>
+</label>
+</div>
+</div>
+</div>
+</div>
+</div>
+
 </main>
 
 <footer role="contentinfo">
 <div class="footer-nav">
-<a href="/">About</a>
+<a href="#" id="getStartedBtn">Try Outparse</a>
 <a href="/index.html#feedback">Feedback</a>
 <a href="/privacy.html">Privacy</a>
 </div>
@@ -726,10 +1241,43 @@ max-height: 80vh;
 </footer>
 
 <script>
-document.getElementById('getStartedBtn').addEventListener('click', function(e) {
-e.preventDefault();
+document.addEventListener('DOMContentLoaded', function() {
+const mobileMenuButtons = document.querySelectorAll('.mobile-menu-button');
+const mobileMenu = document.querySelector('.mobile-menu');
+const overlay = document.querySelector('.overlay');
+
+mobileMenuButtons.forEach(button => {
+button.addEventListener('click', function() {
+mobileMenu.classList.toggle('active');
+overlay.classList.toggle('active');
+document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+});
+});
+
+overlay.addEventListener('click', function() {
+mobileMenu.classList.remove('active');
+overlay.classList.remove('active');
+document.body.style.overflow = '';
+});
+
+function showModal() {
 document.body.classList.add('modal-open');
 document.getElementById('startModal').style.display = 'flex';
+}
+
+document.getElementById('getStartedBtn').addEventListener('click', function(e) {
+e.preventDefault();
+showModal();
+});
+
+document.getElementById('headerCtaBtn').addEventListener('click', function(e) {
+e.preventDefault();
+showModal();
+});
+
+document.getElementById('mobileCtaBtn').addEventListener('click', function(e) {
+e.preventDefault();
+showModal();
 });
 
 document.getElementById('cancelModalBtn').addEventListener('click', function() {
@@ -752,6 +1300,247 @@ e.preventDefault();
 option.click();
 }
 });
+});
+
+const accessibilityBtn = document.querySelector('.accessibility-btn');
+const accessibilityModal = document.getElementById('accessibilityModal');
+const closeModal = document.querySelector('.close-modal');
+const readAloudToggle = document.getElementById('readAloudToggle');
+const siteLogo = document.getElementById('siteLogo');
+
+accessibilityBtn.addEventListener('click', () => {
+accessibilityModal.style.display = 'flex';
+document.body.classList.add('modal-open');
+});
+closeModal.addEventListener('click', () => {
+accessibilityModal.style.display = 'none';
+document.body.classList.remove('modal-open');
+});
+
+window.addEventListener('click', (e) => {
+if (e.target === accessibilityModal) {
+accessibilityModal.style.display = 'none';
+document.body.classList.remove('modal-open');
+}
+});
+
+// Add event listeners for option headers
+const optionHeaders = document.querySelectorAll('.option-header');
+optionHeaders.forEach(header => {
+header.addEventListener('click', function() {
+const optionId = this.id.replace('-header', '-options');
+const optionButtons = document.getElementById(optionId);
+const svg = this.querySelector('svg');
+optionButtons.classList.toggle('active');
+this.classList.toggle('active');
+});
+});
+
+// Add event listeners for option buttons
+document.querySelectorAll('.option-btn').forEach(btn => {
+btn.addEventListener('click', function() {
+const value = this.dataset.value;
+const groupId = this.closest('.option-group').querySelector('.option-header').id.replace('-header', '');
+const groupButtons = document.querySelectorAll(`#${groupId}-options .option-btn`);
+groupButtons.forEach(b => b.classList.remove('active'));
+this.classList.add('active');
+
+switch(groupId) {
+case 'mode':
+setTheme(value);
+break;
+case 'font':
+setFont(value);
+break;
+case 'text-size':
+setTextSize(value);
+break;
+case 'line-height':
+setLineHeight(value);
+break;
+case 'letter-spacing':
+setLetterSpacing(value);
+break;
+}
+});
+});
+
+function saveSettings(key, value) {
+localStorage.setItem(key, value);
+}
+
+function getSetting(key) {
+return localStorage.getItem(key);
+}
+
+function setTheme(theme) {
+if (theme === 'dark') {
+document.body.classList.add('dark-mode');
+} else {
+document.body.classList.remove('dark-mode');
+}
+saveSettings('theme', theme);
+}
+
+function setFont(font) {
+let fontValue;
+switch(font) {
+case 'Noto Sans':
+fontValue = "'Noto Sans', sans-serif";
+break;
+case 'Montserrat':
+fontValue = "'Montserrat', sans-serif";
+break;
+case 'Lexend':
+fontValue = "'Lexend', sans-serif";
+break;
+case 'Segoe UI':
+fontValue = "'Segoe UI', sans-serif";
+break;
+case 'Atkinson Hyperlegible':
+fontValue = "'Atkinson Hyperlegible', sans-serif";
+break;
+}
+document.documentElement.style.setProperty('--current-font', fontValue);
+document.body.style.fontFamily = fontValue;
+saveSettings('font', font);
+}
+
+function setTextSize(size) {
+document.documentElement.style.setProperty('--current-text-size', size);
+saveSettings('textSize', size);
+}
+
+function setLineHeight(height) {
+document.documentElement.style.setProperty('--current-leading', height);
+saveSettings('lineHeight', height);
+}
+
+function setLetterSpacing(spacing) {
+document.documentElement.style.setProperty('--current-letter-spacing', spacing);
+saveSettings('letterSpacing', spacing);
+}
+
+let speechSynthesis = window.speechSynthesis;
+let utterance = null;
+readAloudToggle.addEventListener('change', (e) => {
+if (e.target.checked) {
+startReadAloud();
+} else {
+stopReadAloud();
+}
+saveSettings('readAloud', e.target.checked);
+});
+
+function startReadAloud() {
+stopReadAloud();
+if (!speechSynthesis) {
+speechSynthesis = window.speechSynthesis;
+}
+const mainContent = document.querySelector('main');
+const text = mainContent.textContent || mainContent.innerText;
+utterance = new SpeechSynthesisUtterance(text);
+utterance.rate = 1;
+utterance.pitch = 1;
+utterance.volume = 1;
+speechSynthesis.speak(utterance);
+}
+
+function stopReadAloud() {
+if (speechSynthesis && speechSynthesis.speaking) {
+speechSynthesis.cancel();
+}
+}
+
+function loadSettings() {
+const savedTheme = getSetting('theme');
+if (savedTheme) {
+setTheme(savedTheme);
+// Set active button
+const modeButtons = document.querySelectorAll('#mode-options .option-btn');
+modeButtons.forEach(btn => {
+if (btn.dataset.value === savedTheme) {
+btn.classList.add('active');
+}
+});
+} else {
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+setTheme('dark');
+document.querySelector('#mode-options .option-btn[data-value="dark"]').classList.add('active');
+} else {
+setTheme('light');
+document.querySelector('#mode-options .option-btn[data-value="light"]').classList.add('active');
+}
+}
+
+const savedFont = getSetting('font');
+if (savedFont) {
+setFont(savedFont);
+// Set active button
+const fontButtons = document.querySelectorAll('#font-options .option-btn');
+fontButtons.forEach(btn => {
+if (btn.dataset.value === savedFont || (savedFont === 'Atkinson Hyperlegible' && btn.textContent === 'Atkinson')) {
+btn.classList.add('active');
+}
+});
+} else {
+setFont('Noto Sans');
+document.querySelector('#font-options .option-btn[data-value="Noto Sans"]').classList.add('active');
+}
+
+const savedTextSize = getSetting('textSize');
+if (savedTextSize) {
+setTextSize(savedTextSize);
+// Set active button
+const textSizeButtons = document.querySelectorAll('#text-size-options .option-btn');
+textSizeButtons.forEach(btn => {
+if (btn.dataset.value === savedTextSize) {
+btn.classList.add('active');
+}
+});
+} else {
+setTextSize('var(--text-base)');
+document.querySelector('#text-size-options .option-btn[data-value="var(--text-base)"]').classList.add('active');
+}
+
+const savedLineHeight = getSetting('lineHeight');
+if (savedLineHeight) {
+setLineHeight(savedLineHeight);
+// Set active button
+const lineHeightButtons = document.querySelectorAll('#line-height-options .option-btn');
+lineHeightButtons.forEach(btn => {
+if (btn.dataset.value === savedLineHeight) {
+btn.classList.add('active');
+}
+});
+} else {
+setLineHeight('var(--leading-relaxed)');
+document.querySelector('#line-height-options .option-btn[data-value="var(--leading-relaxed)"]').classList.add('active');
+}
+
+const savedLetterSpacing = getSetting('letterSpacing');
+if (savedLetterSpacing) {
+setLetterSpacing(savedLetterSpacing);
+// Set active button
+const letterSpacingButtons = document.querySelectorAll('#letter-spacing-options .option-btn');
+letterSpacingButtons.forEach(btn => {
+if (btn.dataset.value === savedLetterSpacing) {
+btn.classList.add('active');
+}
+});
+} else {
+setLetterSpacing('var(--letter-spacing-normal)');
+document.querySelector('#letter-spacing-options .option-btn[data-value="var(--letter-spacing-normal)"]').classList.add('active');
+}
+
+const savedReadAloud = getSetting('readAloud');
+if (savedReadAloud === 'true') {
+readAloudToggle.checked = true;
+startReadAloud();
+}
+}
+
+loadSettings();
 });
 </script>
 
