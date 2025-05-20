@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outparse - Feedback Form</title>
+<meta name="author" content="Gbemisola Oyeniyi">
+<meta name="description" content="Provide feedback for Outparse writing assistant">
+<style>
+:root {
+--primary-color: #2563eb;
+--button-bg: #2563eb;
+--button-text: white;
+--text-color: #1f2937;
+--white: #ffffff;
+--color-primary: #333;
+--color-secondary: #666;
+--color-light: #f5f5f5;
+--color-lighter: #f9f9f9;
+--color-gray: #ccc;
+--color-dark-gray: #e0e0e0;
+--shadow-sm: 2px 2px 0 rgba(255, 224, 178, 1);
+--radius-sm: 4px;
+--radius-md: 8px;
+--transition: all 0.2s ease-in-out;
+--text-base: 1rem;
+--text-lg: 1.25rem;
+--text-xl: 1.5rem;
+--text-2xl: 1.875rem;
+--leading-tight: 1.25;
+--leading-snug: 1.375;
+}
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+body {
+font-family: 'Noto Sans', sans-serif;
+color: var(--color-primary);
+line-height: var(--leading-snug);
+max-width: 1440px;
+width: 100%;
+margin: 0 auto;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+position: relative;
+}
+header {
+width: 100%;
+background-color: var(--white);
+padding: 1rem;
+}
+main {
+flex: 1;
+padding: 2rem;
+}
+.section {
+max-width: 800px;
+margin: 0 auto;
+width: 100%;
+}
+.section-heading {
+text-align: center;
+font-size: 0.9rem;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+margin-bottom: 3rem;
+color: var(--color-secondary);
+}
+.feedback-form {
+max-width: 600px;
+margin: 0 auto;
+}
+.form-group {
+margin-bottom: 2rem;
+}
+.form-group h3 {
+margin-bottom: 1rem;
+font-size: var(--text-lg);
+}
+.rating-options {
+display: flex;
+gap: 1rem;
+flex-wrap: wrap;
+justify-content: left;
+}
+.rating-option {
+width: 60px;
+height: 60px;
+display: flex;
+align-items: center;
+justify-content: center;
+background: var(--color-lighter);
+border-radius: var(--radius-sm);
+cursor: pointer;
+transition: var(--transition);
+box-shadow: var(--shadow-sm);
+}
+.rating-option:hover {
+transform: scale(1.1);
+}
+.rating-option.selected {
+background: var(--primary-color);
+color: white;
+}
+textarea {
+width: 100%;
+padding: 1rem;
+border: 1px solid var(--color-gray);
+border-radius: var(--radius-sm);
+min-height: 150px;
+resize: vertical;
+font-family: inherit;
+}
+.btn {
+padding: 0.75rem 1.5rem;
+background: var(--button-bg);
+color: var(--button-text);
+border: none;
+border-radius: var(--radius-sm);
+cursor: pointer;
+transition: var(--transition);
+font-weight: 700;
+box-shadow: var(--shadow-sm);
+}
+.btn:hover {
+opacity: 0.9;
+transform: translateY(-2px);
+}
+.btn:disabled {
+opacity: 0.6;
+cursor: not-allowed;
+}
+.toast {
+position: fixed;
+bottom: 20px;
+left: 50%;
+transform: translateX(-50%);
+background: var(--primary-color);
+color: white;
+padding: 1rem 2rem;
+border-radius: var(--radius-md);
+box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+z-index: 1000;
+display: none;
+}
+.error-message {
+color: #dc2626;
+font-size: 0.875rem;
+margin-top: 0.25rem;
+display: block;
+}
+.success-message {
+color: #16a34a;
+font-size: 1rem;
+margin-top: 1rem;
+text-align: center;
+}
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.overlay.active {
+opacity: 1;
+visibility: visible;
+}
+.pulse-spinner {
+width: 60px;
+height: 60px;
+border: 6px solid rgba(255, 224, 178, 1);
+background-color: var(--primary-color);
+border-radius: 50%;
+animation: pulse 1.5s ease-in-out infinite;
+position: relative;
+}
+@keyframes pulse {
+0% {
+transform: scale(0.8);
+opacity: 0.5;
+}
+50% {
+transform: scale(1.2);
+opacity: 1;
+}
+100% {
+transform: scale(0.8);
+opacity: 0.5;
+}
+}
+
+.result-box {
+background: white;
+border-radius: var(--radius-md);
+box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+padding: 2rem;
+max-width: 400px;
+width: 90%;
+text-align: center;
+}
+.result-icon {
+width: 80px;
+height: 80px;
+margin: 0 auto 1.5rem;
+}
+.result-success {
+color: #16a34a;
+}
+.result-error {
+color: #dc2626;
+}
+.result-box h2 {
+font-size: 1.5rem;
+margin-bottom: 1rem;
+}
+.result-box p {
+margin-bottom: 1.5rem;
+}
+.close-overlay {
+padding: 0.75rem 1.5rem;
+background: var(--primary-color);
+color: white;
+border: none;
+border-radius: var(--radius-sm);
+cursor: pointer;
+font-weight: 700;
+}
+@media (max-width: 768px) {
+main {
+padding: 1rem;
+}
+.result-box {
+padding: 1.5rem;
+}
+}
+</style>
+</head>
+<body>
+<header>
+<h1>Outparse Feedback</h1>
+</header>
+<main>  
+  <section class="section">
+<h2 class="section-heading">Feedback</h2>
+<div class="feedback-form">
+<h2>Help Us Improve</h2>
+<p>Outparse is powered by the community. Tell us what's working, what's not, or what you'd love to see next.</p>
+<form id="feedbackForm">
+<div class="form-group">
+<h3>Rate your proofreading experience with Outparse</h3>
+<div class="rating-options">
+<div class="rating-option" data-rating="1">😞</div>
+<div class="rating-option" data-rating="2">😕</div>
+<div class="rating-option" data-rating="3">😐</div>
+<div class="rating-option" data-rating="4">🙂</div>
+<div class="rating-option" data-rating="5">😍</div>
+</div>
+<input type="hidden" id="ratingValue" name="rating" value="">
+<span class="error-message" id="ratingError"></span>
+</div>
+<div class="form-group">
+<h3>Do you have any thoughts you'd like to share?</h3>
+<textarea id="feedbackText" name="feedback" placeholder="Type here..." required></textarea>
+<span class="error-message" id="feedbackError"></span>
+</div>
+<div id="formResponse" class="success-message" aria-live="polite"></div>
+<button type="submit" class="btn" id="submitBtn">Submit</button>
+</form>
+</div>
+</section>
+<div class="toast" id="toast"></div>
+<div class="overlay" id="loadingOverlay">
+<div class="pulse-spinner"></div>
+</div>
+<div class="overlay" id="successOverlay">
+<div class="result-box">
+<svg class="result-icon result-success" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+<polyline points="22,6 12,13 2,6"></polyline>
+</svg>
+<h2>Thank You!</h2>
+<p>Your feedback has been successfully submitted. We appreciate your time and input.</p>
+<button class="close-overlay" onclick="hideOverlays()">Close</button>
+</div>
+</div>
+<div class="overlay" id="errorOverlay">
+<div class="result-box">
+<svg class="result-icon result-error" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="12" cy="12" r="10"></circle>
+<line x1="12" y1="8" x2="12" y2="12"></line>
+<line x1="12" y1="16" x2="12.01" y2="16"></line>
+</svg>
+<h2>Something Went Wrong</h2>
+<p>We couldn't submit your feedback. Please try again or email us directly at support@outparse.com.</p>
+<button class="close-overlay" onclick="hideOverlays()">Close</button>
+</div>
+</div>
+<script>
+function hideOverlays() {
+document.getElementById('loadingOverlay').classList.remove('active');
+document.getElementById('successOverlay').classList.remove('active');
+document.getElementById('errorOverlay').classList.remove('active');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+const ratingOptions = document.querySelectorAll('.rating-option');
+const ratingValue = document.getElementById('ratingValue');
+const feedbackForm = document.getElementById('feedbackForm');
+const submitBtn = document.getElementById('submitBtn');
+const toast = document.getElementById('toast');
+const formResponse = document.getElementById('formResponse');
+const loadingOverlay = document.getElementById('loadingOverlay');
+const successOverlay = document.getElementById('successOverlay');
+const errorOverlay = document.getElementById('errorOverlay');
+
+ratingOptions.forEach(option => {
+option.addEventListener('click', function() {
+ratingOptions.forEach(opt => opt.classList.remove('selected'));
+this.classList.add('selected');
+ratingValue.value = this.getAttribute('data-rating');
+document.getElementById('ratingError').textContent = '';
+});
+});
+
+feedbackForm.addEventListener('submit', async function(e) {
+e.preventDefault();
+clearErrors();
+
+if (!validateForm()) return;
+
+submitBtn.disabled = true;
+formResponse.textContent = '';
+formResponse.classList.remove('success', 'error');
+loadingOverlay.classList.add('active');
+
+try {
+const formData = new FormData(feedbackForm);
+const data = {
+rating: formData.get('rating'),
+feedback: formData.get('feedback'),
+timestamp: new Date().toISOString()
+};
+
+// This points to your Vercel serverless function
+const response = await fetch('https://offt.vercel.app/api/submit-feedback', {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json',
+},
+body: JSON.stringify(data)
+});
+
+if (!response.ok) throw new Error('Failed to submit feedback');
+
+loadingOverlay.classList.remove('active');
+successOverlay.classList.add('active');
+feedbackForm.reset();
+ratingOptions.forEach(opt => opt.classList.remove('selected'));
+ratingValue.value = '';
+} catch (error) {
+console.error('Error:', error);
+loadingOverlay.classList.remove('active');
+errorOverlay.classList.add('active');
+} finally {
+submitBtn.disabled = false;
+}
+});
+
+function validateForm() {
+let isValid = true;
+
+if (!ratingValue.value) {
+document.getElementById('ratingError').textContent = 'Please select a rating';
+isValid = false;
+}
+
+const feedbackText = document.getElementById('feedbackText').value;
+if (!feedbackText.trim()) {
+document.getElementById('feedbackError').textContent = 'Please enter your feedback';
+isValid = false;
+}
+
+return isValid;
+}
+
+function clearErrors() {
+document.querySelectorAll('.error-message').forEach(el => {
+el.textContent = '';
+});
+}
+
+function showToast(message) {
+toast.textContent = message;
+toast.style.display = 'block';
+setTimeout(() => {
+toast.style.display = 'none';
+}, 3000);
+}
+});
+</script>
+</main>
+</body>
+</html>
