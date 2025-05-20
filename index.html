@@ -14,11 +14,15 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
 <link rel="license" href="https://www.gnu.org/licenses/agpl-3.0.html">
+<link rel="preload" href="/assets/images/logo-light.svg" as="image" type="image/svg+xml">
+<link rel="preload" href="/assets/images/logo-dark.svg" as="image" type="image/svg+xml">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&family=Lexend:wght@400;500;700&family=Montserrat:wght@400;500;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
 --primary-color: #2563eb;
 --accent: rgba(255, 224, 178, 1);
+--button-bg: #2563eb;
+--button-text: white;
 --text-color: #1f2937;
 --white: #ffffff;
 --mobile-menu-width: 280px;
@@ -29,8 +33,9 @@
 --color-lighter: #f9f9f9;
 --color-gray: #ccc;
 --color-dark-gray: #e0e0e0;
---shadow-sm: 2px 2px 0 rgba(37, 99, 235, 0.3);
---shadow-md: 4px 4px 0 rgba(37, 99, 235, 0.5);
+--shadow-black: 2px 2px 0 rgba(255, 255, 255, 0.15);
+--shadow-sm: 2px 2px 0 rgba(255, 224, 178, 1);
+--shadow-md: 4px 4px 0 rgba(255, 224, 178, 1);
 --radius-sm: 4px;
 --radius-md: 8px;
 --transition: all 0.2s ease-in-out;
@@ -59,12 +64,13 @@
 --current-letter-spacing: var(--letter-spacing-normal);
 --gradient: linear-gradient(
   to bottom right,
-  rgba(180, 200, 230, 1) 0%,
-  rgba(200, 215, 240, 0.9) 40%,
-  rgba(220, 230, 250, 0.9) 70%,
-  rgba(235, 240, 255, 1) 85%,
-  rgba(245, 245, 255, 1) 100%
+  rgba(230, 240, 255, 1) 0%,
+  rgba(187, 215, 252, 1) 40%,
+  rgba(137, 181, 250, 0.9) 70%,
+  rgba(77, 141, 245, 0.95) 85%,
+  rgba(37, 99, 235, 1) 100%
 );
+
 --gradient-dark: linear-gradient(
 to bottom right,
 rgba(10, 25, 60, 1) 0%,
@@ -119,21 +125,22 @@ color: #f0f0f0;
 header {
 width: 100%; 
 background-color: var(--white);
-margin: 0 auto;
-padding: 0.5rem;
+margin-bottom: 1rem;
 }
 
 .header-container {
 display: flex;
 justify-content: space-between;
 align-items: center;
+width: 100%;
 max-width: 1200px;
+padding: 1rem 0.5rem;
 margin: 0 auto;
 }
 
 .logo {
 height: auto;
-max-width: 150px;
+max-width: 200px;
 }
 
 .nav {
@@ -160,11 +167,10 @@ color: var(--primary-color);
 }
 
 .cta-button, .mobile-cta-button {
-background: var(--primary-color);
-color: white;
-box-shadow: var(--shadow-md);
+background: var(--button-bg);
+color: var(--button-text);
+box-shadow: var(--shadow-sm);
 border: 2px solid var(--primary-color);
-padding: 0.5rem 1rem;
 border-radius: 4px;
 font-weight: 700;
 cursor: pointer;
@@ -175,7 +181,12 @@ transition: var(--transition);
 background: transparent;  
 color: var(--primary-color);
 }
-
+.cta-button {
+padding: 0.5rem 1rem;  
+}
+.mobile-cta-button {
+padding: 0.5rem 0.75rem;
+}
 .mobile-menu-button {
 display: none;
 background: none;
@@ -397,15 +408,15 @@ margin-bottom: 2rem;
 
 .btn {
 padding: 0.75rem 1.5rem;
-background: var(--primary-color);
-color: white;
-border: none;
+background: var(--button-bg);
+color: var(--button-text);
+border: 2px solid var(--primary-color);
 border-radius: var(--radius-sm);
 cursor: pointer;
 transition: var(--transition);
 text-decoration: none;
 font-weight: 700;
-box-shadow: var(--shadow-md);
+box-shadow: var(--shadow-sm);
 }
 
 .btn:hover {
@@ -505,7 +516,7 @@ display: flex;
 align-items: center;
 justify-content: center;
 background: var(--color-lighter);
-border-radius: var(--radius-md);
+border-radius: var(--radius-sm);
 cursor: pointer;
 transition: var(--transition);
 box-shadow: var(--shadow-sm);
@@ -518,12 +529,18 @@ transform: scale(1.1);
 textarea {
 width: 100%;
 padding: 1rem;
+background-color: var(--color-lighter);
+color: var(--text-color);
 border: 1px solid var(--color-gray);
 border-radius: var(--radius-sm);
 min-height: 150px;
 resize: vertical;
 font-family: inherit;
 overflow-y: auto;
+}
+
+textarea::placeholder {
+color: var(--color-secondary);
 }
 
 textarea::-webkit-scrollbar {
@@ -873,9 +890,9 @@ border-bottom-color: transparent;
 }
 
 @media (max-width: 768px) {
-header {
-padding: 0.5rem 0.25rem;
-}
+.logo {
+max-width: 120px;
+}  
 .nav, .cta-button {
 display: none;
 }
@@ -885,9 +902,7 @@ display: block;
 .mobile-header-actions {
 display: flex;
 }
-}
 
-@media (max-width: 767px) {
 .modal {
 align-items: flex-end;
 }
@@ -915,7 +930,7 @@ Accessibility
 <header>
 <div class="header-container">
 <a href="/">
-<img src="/assets/images/logo.svg" alt="Company Logo" class="logo" id="siteLogo">
+<img src="/assets/images/logo-light.svg" alt="Light Mode Company Logo" class="logo" id="siteLogo">
 </a>
 
 <div class="nav">
@@ -1376,8 +1391,10 @@ return localStorage.getItem(key);
 function setTheme(theme) {
 if (theme === 'dark') {
 document.body.classList.add('dark-mode');
+siteLogo.src = "/assets/images/logo-dark.svg";
 } else {
 document.body.classList.remove('dark-mode');
+siteLogo.src = "/assets/images/logo-light.svg";
 }
 saveSettings('theme', theme);
 }
