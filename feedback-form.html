@@ -29,6 +29,18 @@
 --text-2xl: 1.875rem;
 --leading-tight: 1.25;
 --leading-snug: 1.375;
+--toast-success-bg: #f0fdf4;
+--toast-success-border: #16a34a;
+--toast-success-text: #166534;
+--toast-error-bg: #fef2f2;
+--toast-error-border: #dc2626;
+--toast-error-text: #991b1b;
+--toast-warning-bg: #fefce8;
+--toast-warning-border: #d97706;
+--toast-warning-text: #854d0e;
+--toast-info-bg: #eff6ff;
+--toast-info-border: #2563eb;
+--toast-info-text: #1e40af;
 }
 * {
 margin: 0;
@@ -114,16 +126,24 @@ min-height: 150px;
 resize: vertical;
 font-family: inherit;
 }
-.btn {
+.btn, .btn-secondary {
 padding: 0.75rem 1.5rem;
-background: var(--button-bg);
-color: var(--button-text);
-border: none;
+border: 2px solid var(--button-bg);
 border-radius: var(--radius-sm);
 cursor: pointer;
 transition: var(--transition);
 font-weight: 700;
 box-shadow: var(--shadow-sm);
+}
+.btn {
+background: var(--button-bg);
+color: var(--button-text);
+text-transform: uppercase;
+letter-spacing: 0.15em;
+}
+.btn-secondary {
+background: var(--white);
+color: var(--primary-color);
 }
 .btn:hover {
 opacity: 0.9;
@@ -135,22 +155,48 @@ cursor: not-allowed;
 }
 .toast {
 position: fixed;
-bottom: 20px;
+top: 20px;
 left: 50%;
 transform: translateX(-50%);
-background: var(--primary-color);
-color: white;
-padding: 1rem 2rem;
-border-radius: var(--radius-md);
-box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+padding: 0.5rem 0.75rem;
+border-radius: 50px;
+box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 z-index: 1000;
 display: none;
+align-items: center;
+gap: 0.75rem;
+font-weight: 500;
+border: 2px solid;
+background: var(--toast-success-bg);
+border-color: var(--toast-success-border);
+color: var(--toast-success-text);
 }
+.toast.success {
+background: var(--toast-success-bg);
+border-color: var(--toast-success-border);
+color: var(--toast-success-text);
+}
+.toast.error {
+background: var(--toast-error-bg);
+border-color: var(--toast-error-border);
+color: var(--toast-error-text);
+}
+.toast.warning {
+background: var(--toast-warning-bg);
+border-color: var(--toast-warning-border);
+color: var(--toast-warning-text);
+}
+.toast.info {
+background: var(--toast-info-bg);
+border-color: var(--toast-info-border);
+color: var(--toast-info-text);
+}
+
 .error-message {
 color: #dc2626;
 font-size: 0.875rem;
 margin-top: 0.25rem;
-display: block;
+display: none;
 }
 .success-message {
 color: #16a34a;
@@ -283,6 +329,9 @@ background: var(--color-lighter);
 border: 1px solid var(--color-gray);
 border-radius: var(--radius-sm);
 cursor: pointer;
+display: flex;
+align-items: center;
+gap: 0.5rem;
 }
 .verification-buttons button:hover {
 background: var(--color-light);
@@ -296,6 +345,15 @@ color: #16a34a;
 }
 .verification-status.error {
 color: #dc2626;
+}
+.verification-note {
+font-size: 0.75rem;
+color: var(--color-secondary);
+font-weight: 300;
+margin-top: 0.25rem;
+}
+.error-field {
+border-color: #dc2626 !important;
 }
 @media (max-width: 768px) {
 main {
@@ -319,7 +377,7 @@ padding: 1.5rem;
 <p>Outparse is powered by the community. Tell us what's working, what's not, or what you'd love to see next.</p>
 <form id="feedbackForm">
 <div class="form-group">
-<h3>Rate your proofreading experience with Outparse</h3>
+<h3>Rate your experience with Outparse</h3>
 <div class="rating-options">
 <div class="rating-option" data-rating="1">😞</div>
 <div class="rating-option" data-rating="2">😕</div>
@@ -332,20 +390,21 @@ padding: 1.5rem;
 </div>
 <div class="form-group">
 <h3>Do you have any thoughts you'd like to share?</h3>
-<textarea id="feedbackText" name="feedback" placeholder="Type here..." maxlength="1000" required></textarea>
-<div class="char-counter"><span id="charCount">0</span>/1000 characters</div>
+<textarea id="feedbackText" name="feedback" placeholder="Type here..." maxlength="500" required></textarea>
+<div class="char-counter"><span id="charCount">0</span>/500 characters</div>
 <div class="error-message" id="feedbackError">Please share your feedback to continue</div>
 </div>
 <div class="form-group verification-group">
 <h3>Verification</h3>
 <div class="verification-code" id="verificationCode"></div>
+<div class="verification-note">(Not case sensitive)</div>
 <div class="verification-input">
 <input type="text" id="verificationInput" placeholder="Enter the code above">
-<button type="button" class="btn" id="verifyBtn">Verify</button>
+<button type="button" class="btn-secondary" id="verifyBtn">Verify</button>
 </div>
 <div class="verification-buttons">
-<button type="button" id="refreshCode">Refresh Code</button>
-<button type="button" id="readAloud">Read Aloud</button>
+<button type="button" id="refreshCode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg> Refresh</button>
+<button type="button" id="readAloud"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg> Read Aloud</button>
 </div>
 <div class="verification-status" id="verificationStatus"></div>
 </div>
@@ -401,11 +460,30 @@ function updateCharCount() {
 const textarea = document.getElementById('feedbackText');
 const charCount = document.getElementById('charCount');
 charCount.textContent = textarea.value.length;
-if (textarea.value.length > 900) {
+if (textarea.value.length > 450) {
 charCount.parentElement.classList.add('warning');
 } else {
 charCount.parentElement.classList.remove('warning');
 }
+}
+
+function showToast(message, type = 'info') {
+const toast = document.getElementById('toast');
+toast.textContent = message;
+toast.className = `toast ${type}`;
+toast.innerHTML = `
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+${type === 'success' ? '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>' : 
+type === 'error' ? '<circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line>' : 
+type === 'warning' ? '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line>' : 
+'<circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line>'}
+</svg>
+${message}
+`;
+toast.style.display = 'flex';
+setTimeout(() => {
+toast.style.display = 'none';
+}, 3000);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -413,7 +491,6 @@ const ratingOptions = document.querySelectorAll('.rating-option');
 const ratingValue = document.getElementById('ratingValue');
 const feedbackForm = document.getElementById('feedbackForm');
 const submitBtn = document.getElementById('submitBtn');
-const toast = document.getElementById('toast');
 const formResponse = document.getElementById('formResponse');
 const loadingOverlay = document.getElementById('loadingOverlay');
 const successOverlay = document.getElementById('successOverlay');
@@ -426,6 +503,8 @@ const readAloud = document.getElementById('readAloud');
 const verificationStatus = document.getElementById('verificationStatus');
 const feedbackText = document.getElementById('feedbackText');
 const charCount = document.getElementById('charCount');
+const ratingError = document.getElementById('ratingError');
+const feedbackError = document.getElementById('feedbackError');
 
 let currentCode = generateVerificationCode();
 verificationCode.textContent = currentCode;
@@ -437,19 +516,24 @@ option.addEventListener('click', function() {
 ratingOptions.forEach(opt => opt.classList.remove('selected'));
 this.classList.add('selected');
 ratingValue.value = this.getAttribute('data-rating');
-document.getElementById('ratingError').textContent = '';
+ratingError.style.display = 'none';
+document.querySelector('.rating-options').classList.remove('error-field');
 });
 });
 
 verifyBtn.addEventListener('click', function() {
-if (verificationInput.value === currentCode) {
+if (verificationInput.value.toLowerCase() === currentCode.toLowerCase()) {
 verificationStatus.textContent = 'Verification successful!';
 verificationStatus.className = 'verification-status success';
 submitBtn.disabled = false;
+showToast('Verification successful!', 'success');
+verificationInput.classList.remove('error-field');
 } else {
 verificationStatus.textContent = 'Incorrect code. Please try again.';
 verificationStatus.className = 'verification-status error';
 submitBtn.disabled = true;
+showToast('Incorrect verification code', 'error');
+verificationInput.classList.add('error-field');
 }
 });
 
@@ -459,11 +543,14 @@ verificationCode.textContent = currentCode;
 verificationInput.value = '';
 verificationStatus.textContent = '';
 submitBtn.disabled = true;
+verificationInput.classList.remove('error-field');
+showToast('New verification code generated', 'info');
 });
 
 readAloud.addEventListener('click', function() {
 const utterance = new SpeechSynthesisUtterance(currentCode.split('').join(' '));
 window.speechSynthesis.speak(utterance);
+showToast('Reading verification code aloud', 'info');
 });
 
 feedbackForm.addEventListener('submit', async function(e) {
@@ -518,20 +605,29 @@ function validateForm() {
 let isValid = true;
 
 if (!ratingValue.value) {
-document.getElementById('ratingError').textContent = 'Please select a rating';
+ratingError.style.display = 'block';
+document.querySelector('.rating-options').classList.add('error-field');
 isValid = false;
 }
 
 const feedbackText = document.getElementById('feedbackText').value;
 if (!feedbackText.trim()) {
-document.getElementById('feedbackError').textContent = 'Please enter your feedback';
+feedbackError.style.display = 'block';
+document.getElementById('feedbackText').classList.add('error-field');
+isValid = false;
+} else {
+document.getElementById('feedbackText').classList.remove('error-field');
+}
+
+if (verificationInput.value.toLowerCase() !== currentCode.toLowerCase()) {
+verificationStatus.textContent = 'Please verify the code before submitting';
+verificationStatus.className = 'verification-status error';
+verificationInput.classList.add('error-field');
 isValid = false;
 }
 
-if (verificationInput.value !== currentCode) {
-verificationStatus.textContent = 'Please verify the code before submitting';
-verificationStatus.className = 'verification-status error';
-isValid = false;
+if (!isValid) {
+showToast('Please complete all required fields', 'error');
 }
 
 return isValid;
@@ -539,17 +635,12 @@ return isValid;
 
 function clearErrors() {
 document.querySelectorAll('.error-message').forEach(el => {
-el.textContent = '';
+el.style.display = 'none';
 });
 verificationStatus.textContent = '';
-}
-
-function showToast(message) {
-toast.textContent = message;
-toast.style.display = 'block';
-setTimeout(() => {
-toast.style.display = 'none';
-}, 3000);
+document.querySelectorAll('.error-field').forEach(el => {
+el.classList.remove('error-field');
+});
 }
 });
 </script>
