@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outparse - Share Your Feedback</title>
+<link rel="license" href="https://www.gnu.org/licenses/agpl-3.0.html">
+<link rel="preload" href="/assets/images/logo-light.svg" as="image" type="image/svg+xml">
+<link rel="preload" href="/assets/images/logo-dark.svg" as="image" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&family=Lexend:wght@400;500;700&family=Montserrat:wght@400;500;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+--primary-color: #2563eb;
+--accent: rgba(255, 224, 178, 1);
+--button-bg: #2563eb;
+--button-text: white;
+--text-color: #1f2937;
+--white: #ffffff;
+--mobile-menu-width: 280px;
+--transition-speed: 0.3s;
+--color-primary: #333;
+--color-secondary: #666;
+--color-light: #f5f5f5;
+--color-lighter: #f9f9f9;
+--color-gray: #ccc;
+--color-dark-gray: #e0e0e0;
+--shadow-black: 2px 2px 0 rgba(255, 255, 255, 0.15);
+--shadow-sm: 2px 2px 0 rgba(255, 224, 178, 1);
+--shadow-md: 4px 4px 0 rgba(255, 224, 178, 1);
+--radius-sm: 4px;
+--radius-md: 8px;
+--transition: all 0.2s ease-in-out;
+--max-width: 1200px;
+--text-xs: 0.75rem; 
+--text-sm: 0.875rem;
+--text-base: 1rem;  
+--text-md: 1.125rem;
+--text-lg: 1.25rem; 
+--text-xl: 1.5rem;  
+--text-2xl: 1.875rem; 
+--text-3xl: 2.25rem;
+--text-4xl: 3rem; 
+--text-5xl: 3.75rem;  
+--leading-none: 1;
+--leading-tight: 1.25;
+--leading-snug: 1.375;
+--leading-normal: 1.5;
+--leading-relaxed: 1.625;
+--leading-loose: 2;
+--toast-success-bg: #f0fdf4;
+--toast-success-border: #16a34a;
+--toast-success-text: #166534;
+--toast-error-bg: #fef2f2;
+--toast-error-border: #dc2626;
+--toast-error-text: #991b1b;
+--toast-warning-bg: #fefce8;
+--toast-warning-border: #d97706;
+--toast-warning-text: #854d0e;
+--toast-info-bg: #eff6ff;
+--toast-info-border: #2563eb;
+--toast-info-text: #1e40af;
+--letter-spacing-tight: -0.05em;
+--letter-spacing-normal: 0;
+--letter-spacing-wide: 0.05em;
+--letter-spacing-wider: 0.1em;
+--letter-spacing-widest: 0.2em;
+--current-letter-spacing: var(--letter-spacing-normal);
+--gradient: linear-gradient(
+  to bottom right,
+  rgba(230, 240, 255, 1) 0%,
+  rgba(187, 215, 252, 1) 40%,
+  rgba(137, 181, 250, 0.9) 70%,
+  rgba(77, 141, 245, 0.95) 85%,
+  rgba(37, 99, 235, 1) 100%
+);
+
+--gradient-dark: linear-gradient(
+to bottom right,
+rgba(10, 25, 60, 1) 0%,
+rgba(15, 35, 80, 0.9) 40%,
+rgba(20, 45, 100, 0.9) 70%,
+rgba(25, 55, 120, 1) 85%,
+rgba(30, 65, 140, 1) 100%
+);
+--current-font: 'Noto Sans', sans-serif;
+--current-leading: var(--leading-relaxed);
+--current-text-size: var(--text-base);
+}
+
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+letter-spacing: var(--current-letter-spacing);
+}
+
+html {
+scroll-behavior: smooth;
+font-size: 100%; 
+}
+
+body {
+font-family: var(--current-font);
+color: var(--color-primary);
+line-height: var(--current-leading);
+transition: var(--transition);
+max-width: 1440px;
+width: 100%;
+margin: 0 auto;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+}
+
+body.dark-mode {
+background-color: #222;
+color: #f0f0f0;
+--text-color: #f0f0f0;
+--color-primary: #f0f0f0;
+--color-secondary: #ccc;
+--color-light: #333;
+--color-lighter: #444;
+--white: #222;
+--color-gray: #555;
+--color-dark-gray: #666;
+}
+
+header {
+width: 100%; 
+background-color: var(--white);
+margin-bottom: 1rem;
+}
+
+.header-container {
+display: flex;
+justify-content: space-between;
+align-items: center;
+width: 100%;
+max-width: 1200px;
+padding: 1rem 0.5rem;
+margin: 0 auto;
+}
+
+.logo {
+height: 40px;
+}
+
+.nav {
+display: flex;
+align-items: center;
+gap: 2rem;
+}
+
+.nav-list {
+display: flex;
+list-style: none;
+gap: 1.5rem;
+}
+
+.nav-link {
+text-decoration: none;
+color: var(--text-color);
+font-weight: 500;
+transition: color var(--transition-speed) ease;
+}
+
+.nav-link:hover {
+color: var(--primary-color);
+}
+
+.cta-button, .mobile-cta-button {
+background: var(--button-bg);
+color: var(--button-text);
+box-shadow: var(--shadow-sm);
+border: 2px solid var(--primary-color);
+border-radius: 4px;
+font-weight: 700;
+cursor: pointer;
+transition: var(--transition);
+}
+
+.cta-button:hover, .mobile-cta-button:hover {
+background: transparent;  
+color: var(--primary-color);
+}
+.cta-button {
+padding: 0.5rem 1rem;  
+}
+.mobile-cta-button {
+padding: 0.5rem 0.75rem;
+}
+.mobile-menu-button {
+display: none;
+background: none;
+border: none;
+border-radius: 4px;
+color: var(--text-color);
+cursor: pointer;
+padding: 0.25rem 0.5rem;
+}
+
+.mobile-menu-icon {
+width: 24px;
+height: 24px;
+}
+
+.mobile-menu {
+position: fixed;
+top: 0;
+right: 0;
+bottom: 0;
+width: var(--mobile-menu-width);
+background-color: var(--white);
+box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+transform: translateX(100%);
+transition: transform var(--transition-speed) ease;
+z-index: 200;
+padding: 2rem;
+}
+
+.mobile-menu.active {
+transform: translateX(0);
+}
+
+.mobile-nav-list {
+list-style: none;
+display: flex;
+flex-direction: column;
+gap: 1.5rem;
+margin-top: 2rem;
+}
+
+.mobile-nav-link {
+text-decoration: none;
+color: var(--text-color);
+font-size: 1.125rem;
+font-weight: 500;
+display: flex;
+align-items: center;
+gap: 0.75rem;
+}
+
+.mobile-nav-link:hover {
+color: var(--primary-color);
+}
+
+.mobile-nav-icon {
+width: 20px;
+height: 20px;
+}
+
+.overlay {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: rgba(0, 0, 0, 0.5);
+z-index: 100;
+opacity: 0;
+visibility: hidden;
+transition: opacity var(--transition-speed) ease, visibility var(--transition-speed) ease;
+}
+
+.overlay.active {
+opacity: 1;
+visibility: visible;
+}
+
+.mobile-header-actions {
+display: none;
+gap: 0.5rem;
+align-items: center;
+}
+
+.skip-link {
+position: absolute;
+left: -9999px;
+top: 0;
+background: var(--color-primary);
+color: white;
+padding: 1rem;
+z-index: 1000;
+}
+
+.skip-link:focus {
+left: 0;
+}
+
+.accessibility-btn {
+position: fixed;
+bottom: 20px;
+left: 50%;
+transform: translateX(-50%);
+z-index: 100;
+border: 2px solid var(--primary-color);
+background: var(--color-lighter);
+color: var(--color-primary);
+padding: 0.75rem 1.5rem;
+border-radius: 50px;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+transition: all 0.3s ease;
+gap: 0.5rem;
+font-weight: 500;
+}
+
+.accessibility-btn:hover {
+transform: translateX(-50%) scale(1.05);
+}
+
+.accessibility-btn svg {
+width: 20px;
+height: 20px;
+}
+
+main {
+flex: 1;
+padding: 3rem 2rem;
+}
+
+button {
+font-family: var(--current-font);  
+}
+
+h1 {
+font-size: var(--text-2xl);
+line-height: var(--leading-tight);
+font-weight: 700;
+}
+
+h2 {
+font-size: var(--text-xl);
+line-height: var(--leading-tight);
+font-weight: 700;
+}
+
+h3 {
+font-size: var(--text-lg);
+line-height: var(--leading-snug);
+font-weight: 700;
+}
+
+p {
+font-size: var(--current-text-size);
+line-height: var(--current-leading);
+max-width: 65ch;
+}
+
+.small-text {
+font-size: var(--text-sm);
+line-height: var(--leading-normal);
+}
+
+a {
+color: var(--color-primary);
+text-decoration: none;
+transition: var(--transition);
+outline: none;
+}
+
+a:hover,
+a:focus {
+color: var(--primary-color);
+text-decoration-thickness: 2px;
+}
+
+a:active {
+color: var(--color-secondary);
+text-decoration-thickness: 2px;
+}
+
+a:focus-visible {
+outline: 2px solid var(--primary-color);
+outline-offset: 2px;
+border-radius: var(--radius-sm);
+}
+
+body.dark-mode .hero {
+background: #222;
+}
+
+.section {
+max-width: 800px;
+margin: 0 auto;
+width: 100%;
+margin-bottom: 2rem;
+}
+.section-heading {
+text-align: center;
+font-size: 0.9rem;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+margin-bottom: 3rem;
+color: var(--color-secondary);
+}
+.feedback-form {
+max-width: 600px;
+margin: 0 auto;
+}
+.form-group {
+margin-bottom: 2rem;
+}
+.form-group h3 {
+margin: 1.5rem 0;
+font-size: var(--text-lg);
+}
+.rating-options {
+display: flex;
+gap: 1rem;
+flex-wrap: wrap;
+justify-content: left;
+}
+.rating-option {
+width: 60px;
+height: 60px;
+display: flex;
+align-items: center;
+justify-content: center;
+background: var(--color-lighter);
+border-radius: var(--radius-sm);
+cursor: pointer;
+transition: var(--transition);
+box-shadow: var(--shadow-sm);
+}
+.rating-option:hover {
+transform: scale(1.1);
+}
+.rating-option.selected {
+background: var(--primary-color);
+color: white;
+}
+textarea {
+background: var(--white);
+color: var(--color-secondary);
+width: 100%;
+padding: 1rem;
+border: 1px solid var(--color-gray);
+border-radius: var(--radius-sm);
+min-height: 150px;
+resize: vertical;
+font-family: inherit;
+}
+
+textarea::placeholder, input::placeholder {
+color: var(--color-secondary);  
+}
+
+.btn, .btn-secondary {
+padding: 0.75rem 1.5rem;
+border: 2px solid var(--button-bg);
+border-radius: var(--radius-sm);
+cursor: pointer;
+transition: var(--transition);
+font-weight: 700;
+box-shadow: var(--shadow-sm);
+}
+
+.btn {
+background: var(--button-bg);
+color: var(--button-text);
+text-transform: uppercase;
+letter-spacing: 0.15em;
+}
+.btn-secondary {
+background: var(--white);
+color: var(--primary-color);
+}
+.btn:hover {
+opacity: 0.9;
+transform: translateY(-2px);
+}
+.btn:disabled {
+opacity: 0.6;
+cursor: not-allowed;
+}
+
+.toast {
+position: fixed;
+width: max-content;
+max-width: 350px;
+top: 20px;
+left: 50%;
+transform: translateX(-50%);
+padding: 0.5rem 0.75rem;
+border-radius: 50px;
+box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+z-index: 1000;
+display: none;
+align-items: center;
+gap: 0.75rem;
+font-weight: 500;
+border: 2px solid;
+background: var(--toast-success-bg);
+border-color: var(--toast-success-border);
+color: var(--toast-success-text);
+}
+.toast.success {
+background: var(--toast-success-bg);
+border-color: var(--toast-success-border);
+color: var(--toast-success-text);
+}
+.toast.error {
+background: var(--toast-error-bg);
+border-color: var(--toast-error-border);
+color: var(--toast-error-text);
+}
+.toast.warning {
+background: var(--toast-warning-bg);
+border-color: var(--toast-warning-border);
+color: var(--toast-warning-text);
+}
+.toast.info {
+background: var(--toast-info-bg);
+border-color: var(--toast-info-border);
+color: var(--toast-info-text);
+}
+
+.error-message {
+color: #dc2626;
+font-size: 0.875rem;
+margin-top: 0.25rem;
+display: none;
+}
+.success-message {
+color: #16a34a;
+font-size: 1rem;
+margin-top: 1rem;
+text-align: center;
+}
+.feedback-overlay {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0,0,0,0.5);
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+z-index: 9999;
+opacity: 0;
+visibility: hidden;
+transition: all 0.3s ease;
+backdrop-filter: blur(10px);
+-webkit-backdrop-filter: blur(10px);
+}
+.feedback-overlay.active {
+opacity: 1;
+visibility: visible;
+}
+.pulse-spinner {
+width: 60px;
+height: 60px;
+border: 6px solid rgba(255, 224, 178, 1);
+background-color: var(--primary-color);
+border-radius: 50%;
+animation: pulse 1.5s ease-in-out infinite;
+position: relative;
+}
+@keyframes pulse {
+0% {
+transform: scale(0.8);
+opacity: 0.5;
+}
+50% {
+transform: scale(1.2);
+opacity: 1;
+}
+100% {
+transform: scale(0.8);
+opacity: 0.5;
+}
+}
+.result-box {
+background: var(--white);
+border-radius: var(--radius-md);
+box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+padding: 2rem;
+max-width: 400px;
+width: 90%;
+text-align: center;
+}
+.result-icon {
+width: 80px;
+height: 80px;
+margin: 0 auto 1.5rem;
+}
+.result-success {
+color: #16a34a;
+}
+.result-error {
+color: #dc2626;
+}
+.result-box h2 {
+font-size: 1.5rem;
+margin-bottom: 1rem;
+}
+.result-box p {
+margin-bottom: 1.5rem;
+}
+.close-overlay {
+padding: 0.75rem 1.5rem;
+background: var(--primary-color);
+color: white;
+border: none;
+border-radius: var(--radius-sm);
+cursor: pointer;
+font-weight: 700;
+}
+.char-counter {
+text-align: right;
+font-size: 0.875rem;
+color: var(--color-secondary);
+margin-top: 0.25rem;
+}
+.char-counter.warning {
+color: #dc2626;
+}
+.verification-group {
+margin: 2rem 0;
+}
+.verification-code {
+font-family: monospace;
+font-size: 1.5rem;
+letter-spacing: 0.2em;
+padding: 0.5rem 1rem;
+background: var(--color-lighter);
+border-radius: var(--radius-sm);
+display: inline-block;
+margin-bottom: 0.5rem;
+}
+.verification-input {
+display: flex;
+gap: 0.5rem;
+margin-top: 0.5rem;
+}
+.verification-input input {
+background: var(--white);
+color: var(--color-secondary);
+flex: 1;
+padding: 0.75rem;
+border: 1px solid var(--color-gray);
+border-radius: var(--radius-sm);
+}
+.verification-buttons {
+display: flex;
+gap: 0.5rem;
+margin-top: 0.5rem;
+}
+.verification-buttons button {
+padding: 0.5rem 1rem;
+background: var(--color-lighter);
+color: var(--color-secondary);
+border: 1px solid var(--color-gray);
+border-radius: var(--radius-sm);
+cursor: pointer;
+display: flex;
+align-items: center;
+gap: 0.5rem;
+}
+.verification-buttons button:hover {
+background: var(--color-light);
+}
+.verification-status {
+margin-top: 0.5rem;
+font-size: 0.875rem;
+}
+.verification-status.success {
+color: #16a34a;
+}
+.verification-status.error {
+color: #dc2626;
+}
+.verification-note {
+font-size: 0.75rem;
+color: var(--color-secondary);
+font-weight: 300;
+margin-top: 0.25rem;
+}
+.error-field {
+border-color: #dc2626 !important;
+}
+
+.modal {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: rgba(0,0,0,0.5);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 300;
+display: none;
+overflow-y: auto;
+}
+
+body.modal-open {
+overflow: hidden;
+}
+
+.modal-content {
+background: var(--white);
+padding: 2rem 1.5rem;
+border-radius: var(--radius-md);
+max-width: 500px;
+width: 100%;
+box-shadow: var(--shadow-md);
+max-height: 90vh;
+overflow-y: auto;
+}
+
+.modal-content::-webkit-scrollbar {
+width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+background: var(--color-lighter);
+border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+background-color: var(--color-gray);
+border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+background-color: var(--color-secondary);
+}
+
+.modal-buttons {
+display: flex;
+justify-content: flex-end;
+gap: 1rem;
+margin-top: 1rem;
+}
+
+.modal-buttons button {
+padding: 0.5rem 1rem;
+border: none;
+border-radius: var(--radius-sm);
+cursor: pointer;
+transition: var(--transition);
+}
+
+.confirm-btn {
+background: var(--primary-color);
+color: var(--white);
+}
+
+.confirm-btn:hover {
+opacity: 0.9;
+}
+
+.cancel-btn {
+color: red;
+font-size: 1rem;
+padding: 0.75rem 1.5rem;
+font-weight: 700;
+background: var(--color-light);
+}
+
+.cancel-btn:hover {
+background: var(--color-dark-gray);
+}
+
+.modal-options {
+display: flex;
+flex-direction: column;
+gap: 1.5rem;
+margin: 1rem 0;
+}
+
+.modal-option {
+background: var(--color-lighter);
+padding: 1rem;
+border-radius: var(--radius-md);
+transition: var(--transition);
+}
+
+.modal-option:hover {
+transform: translateY(-2px);
+box-shadow: var(--shadow-sm);
+}
+
+.modal-option h3 {
+margin-bottom: 0.5rem;
+}
+
+.modal-option p {
+color: var(--color-secondary);
+}
+
+.modal-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 1rem;
+}
+
+.close-modal {
+background: none;
+border: none;
+cursor: pointer;
+font-size: 1.5rem;
+color: var(--color-secondary);
+}
+
+.toggle-switch {
+position: relative;
+display: inline-block;
+width: 60px;
+height: 34px;
+margin-left: 1rem;
+}
+
+.toggle-switch input {
+opacity: 0;
+width: 0;
+height: 0;
+}
+
+.toggle-slider {
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: var(--color-gray);
+transition: .4s;
+border-radius: 34px;
+}
+
+.toggle-slider:before {
+position: absolute;
+content: "";
+height: 26px;
+width: 26px;
+left: 4px;
+bottom: 4px;
+background-color: white;
+transition: .4s;
+border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+background-color: var(--primary-color);
+}
+
+input:checked + .toggle-slider:before {
+transform: translateX(26px);
+}
+
+.toggle-container {
+display: flex;
+align-items: center;
+justify-content: space-between;
+width: 100%;
+margin-bottom: 1.5rem;
+}
+
+.option-group {
+margin-bottom: 1.5rem;
+}
+
+.option-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+cursor: pointer;
+padding: 0.5rem 0;
+border-bottom: 1px solid var(--color-gray);
+margin-bottom: 0.5rem;
+}
+
+.option-header h3 {
+margin: 0;
+}
+
+.option-header svg {
+transition: transform 0.3s ease;
+}
+
+.option-header.active svg {
+transform: rotate(180deg);
+}
+
+.option-buttons {
+display: none;
+flex-wrap: wrap;
+gap: 0.5rem;
+padding: 0.5rem 0;
+}
+
+.option-buttons.active {
+display: flex;
+}
+
+.option-btn {
+padding: 0.5rem 1rem;
+background: var(--white);
+color: var(--color-primary);
+box-shadow: var(--shadow-sm);
+border: 1px solid var(--color-gray);
+border-radius: var(--radius-sm);
+cursor: pointer;
+transition: var(--transition);
+}
+
+.option-btn:hover {
+background: var(--color-lighter);
+}
+
+.option-btn.active {
+background: var(--primary-color);
+color: white;
+border-color: var(--white);
+box-shadow: var(--shadow-sm);
+}
+
+.font-btn-noto {
+font-family: 'Noto Sans', sans-serif;
+}
+
+.font-btn-montserrat {
+font-family: 'Montserrat', sans-serif;
+}
+
+.font-btn-lexend {
+font-family: 'Lexend', sans-serif;
+}
+
+.font-btn-segoe {
+font-family: 'Segoe UI', sans-serif;
+}
+
+.font-btn-atkinson {
+font-family: 'Atkinson Hyperlegible', sans-serif;
+}
+
+footer {
+width: 100%;
+background: var(--gradient);
+padding: 3rem 2rem 5rem;
+text-align: center;
+margin-top: auto;
+}
+
+body.dark-mode footer {
+background: var(--gradient-dark);
+}
+
+.footer-nav {
+display: flex;
+justify-content: center;
+gap: 2rem;
+margin-bottom: 1.5rem;
+flex-wrap: wrap;
+}
+
+.footer-nav a {
+text-decoration: none;
+color: var(--color-primary);
+transition: var(--transition);
+}
+
+.footer-nav a:hover {
+color: var(--color-secondary);
+}
+
+.social-icons {
+display: flex;
+justify-content: center;
+gap: 1.5rem;
+margin-bottom: 1.5rem;
+}
+
+.social-icons a {
+display: inline-block;
+transition: var(--transition);
+}
+
+.social-icons a:hover {
+transform: translateY(-2px);
+}
+
+.social-icons svg {
+width: 24px;
+height: 24px;
+color: var(--color-primary);
+}
+
+.copyright {
+font-size: 0.9rem;
+margin-bottom: 40px;
+color: var(--color-secondary);
+}
+
+.copyright a {
+text-decoration: none;
+color: var(--color-primary);
+border-bottom: 1px dotted var(--color-primary);
+transition: var(--transition);
+}
+
+.copyright a:hover {
+border-bottom-color: transparent;
+}
+
+@media (max-width: 768px) {
+.logo {
+height: 35px;
+}  
+.nav, .cta-button {
+display: none;
+}
+.mobile-menu-button {
+display: block;
+}
+.mobile-header-actions {
+display: flex;
+}
+
+.result-box {
+padding: 1.5rem;
+}
+
+.toast {
+max-width: 350px;  
+}
+
+.modal {
+align-items: flex-end;
+}
+.modal-content {
+width: 100%;
+max-height: 80vh;
+}
+.accessibility-btn {
+width: auto;
+padding: 0.75rem 1rem;
+font-size: 0.875rem;
+}
+}
+</style>
+</head>
+<body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<button class="accessibility-btn" aria-label="Accessibility Options">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+<path d="M12 2a2 2 0 110 4 2 2 0 010-4zm8 5H4a1 1 0 000 2h7v3.5l-3.1 7.35a1 1 0 001.8.8L12 14.62l2.3 6.03a1 1 0 001.8-.8L13 12.5V9h7a1 1 0 000-2z"/>
+</svg>
+Accessibility
+</button>
+
+<header>
+<div class="header-container">
+<a href="/">
+<img src="/assets/images/logo-light.svg" alt="Light Mode Company Logo" class="logo" id="siteLogo">
+</a>
+
+<div class="nav">
+<ul class="nav-list">
+<li><a href="/index.html#features" class="nav-link">Features</a></li>
+<li><a href="/index.html#cominsoon" class="nav-link">Coming Soon</a></li>
+</ul>
+</div>
+
+<button class="cta-button" id="headerCtaBtn">Get started</button>
+
+<div class="mobile-header-actions">
+<button class="mobile-cta-button" id="mobileCtaBtn">Get started</button>
+<button class="mobile-menu-button" aria-label="Open menu">
+<svg class="mobile-menu-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<line x1="14" y1="5" x2="22" y2="5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+<line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+<line x1="5" y1="19" x2="17" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+</svg>
+</button>
+</div>
+</div>
+</header>
+
+<div class="overlay"></div>
+
+<aside class="mobile-menu">
+<button class="mobile-menu-button" aria-label="Close menu" style="box-shadow: var(--shadow-sm)">
+<svg class="mobile-menu-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</button>
+
+<ul class="mobile-nav-list">
+<li><a href="/index.html#features" class="mobile-nav-link">
+<svg class="mobile-nav-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="11" cy="11" r="8"></circle>
+<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+</svg>
+Features</a></li>
+<li><a href="/index.html#comingsoon" class="mobile-nav-link">
+<svg class="mobile-nav-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M12 20h9"></path>
+<path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+</svg>
+Coming soon</a></li>
+</ul>
+</aside>
+
+<main id="main-content" role="main">
+<section class="section">
+<h2 class="section-heading">Feedback</h2>
+<div class="feedback-form">
+<h2>Help Us Improve</h2>
+<p>Outparse is powered by the community. Tell us what's working, what's not, or what you'd love to see next.</p>
+<form id="feedbackForm">
+<div class="form-group">
+<h3>Rate your experience with Outparse</h3>
+<div class="rating-options">
+<div class="rating-option" data-rating="1">😞</div>
+<div class="rating-option" data-rating="2">😕</div>
+<div class="rating-option" data-rating="3">😐</div>
+<div class="rating-option" data-rating="4">🙂</div>
+<div class="rating-option" data-rating="5">😍</div>
+</div>
+<input type="hidden" id="ratingValue" name="rating" value="">
+<div class="error-message" id="ratingError">Please select a rating to continue</div>
+</div>
+<div class="form-group">
+<h3>Do you have any thoughts you'd like to share?</h3>
+<textarea id="feedbackText" name="feedback" placeholder="Type here..." maxlength="500" required></textarea>
+<div class="char-counter"><span id="charCount">0</span>/500 characters</div>
+<div class="error-message" id="feedbackError">Please share your feedback to continue</div>
+</div>
+<div class="form-group verification-group">
+<h3>Verification</h3>
+<div class="verification-code" id="verificationCode"></div>
+<div class="verification-note">(Not case sensitive)</div>
+<div class="verification-input">
+<input type="text" id="verificationInput" placeholder="Enter the code above">
+<button type="button" class="btn-secondary" id="verifyBtn">Verify</button>
+</div>
+<div class="verification-buttons">
+<button type="button" id="refreshCode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg> Refresh</button>
+<button type="button" id="readAloud"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg> Read Aloud</button>
+</div>
+<div class="verification-status" id="verificationStatus"></div>
+</div>
+<div id="formResponse" class="success-message" aria-live="polite"></div>
+<button type="submit" class="btn" id="submitBtn" disabled>Submit</button>
+</form>
+</div>
+</section>
+<div class="toast" id="toast"></div>
+<div class="feedback-overlay" id="feedbackLoadingOverlay">
+<div class="pulse-spinner"></div>
+</div>
+<div class="feedback-overlay" id="feedbackSuccessOverlay">
+<div class="result-box">
+<svg class="result-icon result-success" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+<polyline points="22,6 12,13 2,6"></polyline>
+</svg>
+<h2>Thank You!</h2>
+<p>Your feedback has been successfully submitted. We appreciate your time and input.</p>
+<button class="close-overlay" onclick="hideFeedbackOverlays()">Close</button>
+</div>
+</div>
+<div class="feedback-overlay" id="feedbackErrorOverlay">
+<div class="result-box">
+<svg class="result-icon result-error" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="12" cy="12" r="10"></circle>
+<line x1="12" y1="8" x2="12" y2="12"></line>
+<line x1="12" y1="16" x2="12.01" y2="16"></line>
+</svg>
+<h2>Something Went Wrong</h2>
+<p>We couldn't submit your feedback. Please try again or email us directly at support@outparse.com.</p>
+<button class="close-overlay" onclick="hideFeedbackOverlays()">Close</button>
+</div>
+</div>
+<div class="modal" id="startModal" role="dialog" aria-modal="true" aria-labelledby="modal-heading">
+<div class="modal-content">
+<h2>✨ Choose how you'd like to start</h2>
+<div class="modal-options">
+<a href="/app/index.html" class="modal-option">
+<h3>Continue as a Guest</h3>
+<p>No sign-up. Your writing stays on your device and clears if you reset your browser. Great for private or one-time work.</p>
+</a>
+<a href="https://outparse-app.github.io" class="modal-option">
+<h3>Create an account</h3>
+<p>Sign up to save your work on our cloud. Great if you want to continue writing later across different browsers or devices.</p>
+</a>
+</div>
+<div class="modal-buttons">
+<button class="cancel-btn" id="cancelModalBtn">Cancel</button>
+</div>
+</div>
+</div>
+
+<div class="modal" id="accessibilityModal">
+<div class="modal-content">
+<div class="modal-header">
+<h2>Accessibility Options</h2>
+<button class="close-modal" aria-label="Close modal">&times;</button>
+</div>
+<p class="modal-description">Customize your viewing experience with these accessibility settings. Changes will be applied immediately.</p>
+<div class="modal-options">
+<div class="option-group">
+<div class="option-header" id="mode-header">
+<h3>Switch Mode</h3>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</div>
+<div class="option-buttons" id="mode-options">
+<button class="option-btn" data-value="light">Light</button>
+<button class="option-btn" data-value="dark">Dark</button>
+</div>
+</div>
+<div class="option-group">
+<div class="option-header" id="font-header">
+<h3>Change Font</h3>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</div>
+<div class="option-buttons" id="font-options">
+<button class="option-btn font-btn-noto" data-value="Noto Sans">Noto Sans</button>
+<button class="option-btn font-btn-montserrat" data-value="Montserrat">Montserrat</button>
+<button class="option-btn font-btn-lexend" data-value="Lexend">Lexend</button>
+<button class="option-btn font-btn-segoe" data-value="Segoe UI">Segoe UI</button>
+<button class="option-btn font-btn-atkinson" data-value="Atkinson Hyperlegible">Atkinson</button>
+</div>
+</div>
+<div class="option-group">
+<div class="option-header" id="text-size-header">
+<h3>Text Size</h3>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</div>
+<div class="option-buttons" id="text-size-options">
+<button class="option-btn" data-value="var(--text-sm)">Small</button>
+<button class="option-btn" data-value="var(--text-base)">Medium</button>
+<button class="option-btn" data-value="var(--text-md)">Large</button>
+<button class="option-btn" data-value="var(--text-lg)">X-Large</button>
+</div>
+</div>
+<div class="option-group">
+<div class="option-header" id="line-height-header">
+<h3>Line Height</h3>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</div>
+<div class="option-buttons" id="line-height-options">
+<button class="option-btn" data-value="var(--leading-none)">None</button>
+<button class="option-btn" data-value="var(--leading-tight)">Tight</button>
+<button class="option-btn" data-value="var(--leading-snug)">Snug</button>
+<button class="option-btn" data-value="var(--leading-normal)">Normal</button>
+<button class="option-btn" data-value="var(--leading-relaxed)">Relaxed</button>
+<button class="option-btn" data-value="var(--leading-loose)">Loose</button>
+</div>
+</div>
+<div class="option-group">
+<div class="option-header" id="letter-spacing-header">
+<h3>Letter Spacing</h3>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</div>
+<div class="option-buttons" id="letter-spacing-options">
+<button class="option-btn" data-value="var(--letter-spacing-tight)">Tight</button>
+<button class="option-btn" data-value="var(--letter-spacing-normal)">Normal</button>
+<button class="option-btn" data-value="var(--letter-spacing-wide)">Wide</button>
+<button class="option-btn" data-value="var(--letter-spacing-wider)">Wider</button>
+<button class="option-btn" data-value="var(--letter-spacing-widest)">Widest</button>
+</div>
+</div>
+<div class="option-group">
+<div class="toggle-container">
+<h3>Read Aloud</h3>
+<label class="toggle-switch">
+<input type="checkbox" id="readAloudToggle">
+<span class="toggle-slider"></span>
+</label>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</main>
+
+<footer role="contentinfo">
+<div class="footer-nav">
+<a href="#" id="getStartedBtn">Try Outparse</a>
+<a href="/privacy.html">Privacy</a>
+<a href="mailto:outparse@gmail.com">Feedback</a>
+</div>
+<div class="social-icons">
+<a href="#" aria-label="GitHub">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+<path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+</svg>
+</a>
+<a href="#" aria-label="LinkedIn">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+<path d="M19 3a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14m-.5 15.5v-5.3a3.26 3.26 0 00-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 011.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 001.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 00-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+</svg>
+</a>
+<a href="#" aria-label="Twitter">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+<path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 01-1.93.07 4.28 4.28 0 004 2.98 8.521 8.521 0 01-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
+</svg>
+</a>
+<a href="#" aria-label="Instagram">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+<path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 01-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 017.8 2m-.2 2A3.6 3.6 0 004 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 003.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 011.25 1.25A1.25 1.25 0 0117.25 8A1.25 1.25 0 0116 6.75a1.25 1.25 0 011.25-1.25M12 7a5 5 0 015 5 5 5 0 01-5 5 5 5 0 01-5-5 5 5 0 015-5m0 2a3 3 0 00-3 3 3 3 0 003 3 3 3 0 003-3 3 3 0 00-3-3z"/>
+</svg>
+</a>
+<a href="#" aria-label="Facebook">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+<path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/>
+</svg>
+</a>
+</div>
+<div class="copyright">
+&copy; <script>document.write(new Date().getFullYear())</script> Outparse. Created by <a href="https://gbemisolaoyeniyi.com" target="_blank" rel="author">Gbemisola Oyeniyi</a>. This open source project is licensed under the <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="license">GNU Affero General Public License v3.0</a>. All Rights Reserved.
+</div>
+</footer>
+
+<script>
+// Utility functions
+function hideFeedbackOverlays() {
+document.getElementById('feedbackLoadingOverlay').classList.remove('active');
+document.getElementById('feedbackSuccessOverlay').classList.remove('active');
+document.getElementById('feedbackErrorOverlay').classList.remove('active');
+}
+
+function generateVerificationCode() {
+const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+let result = '';
+for (let i = 0; i < 6; i++) {
+result += chars.charAt(Math.floor(Math.random() * chars.length));
+}
+return result;
+}
+
+function updateCharCount() {
+const textarea = document.getElementById('feedbackText');
+const charCount = document.getElementById('charCount');
+charCount.textContent = textarea.value.length;
+if (textarea.value.length > 450) {
+charCount.parentElement.classList.add('warning');
+} else {
+charCount.parentElement.classList.remove('warning');
+}
+}
+
+function showToast(message, type = 'info') {
+const toast = document.getElementById('toast');
+toast.textContent = message;
+toast.className = `toast ${type}`;
+toast.innerHTML = `
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+${type === 'success' ? '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>' : 
+type === 'error' ? '<circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line>' : 
+type === 'warning' ? '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line>' : 
+'<circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line>'}
+</svg>
+${message}
+`;
+toast.style.display = 'flex';
+setTimeout(() => {
+toast.style.display = 'none';
+}, 3000);
+}
+
+// Accessibility settings functions
+function saveSettings(key, value) {
+localStorage.setItem(key, value);
+}
+
+function getSetting(key) {
+return localStorage.getItem(key);
+}
+
+function setTheme(theme) {
+const siteLogo = document.getElementById('siteLogo');
+if (theme === 'dark') {
+document.body.classList.add('dark-mode');
+siteLogo.src = "/assets/images/logo-dark.svg";
+} else {
+document.body.classList.remove('dark-mode');
+siteLogo.src = "/assets/images/logo-light.svg";
+}
+saveSettings('theme', theme);
+}
+
+function setFont(font) {
+let fontValue;
+switch(font) {
+case 'Noto Sans':
+fontValue = "'Noto Sans', sans-serif";
+break;
+case 'Montserrat':
+fontValue = "'Montserrat', sans-serif";
+break;
+case 'Lexend':
+fontValue = "'Lexend', sans-serif";
+break;
+case 'Segoe UI':
+fontValue = "'Segoe UI', sans-serif";
+break;
+case 'Atkinson Hyperlegible':
+fontValue = "'Atkinson Hyperlegible', sans-serif";
+break;
+}
+document.documentElement.style.setProperty('--current-font', fontValue);
+document.body.style.fontFamily = fontValue;
+saveSettings('font', font);
+}
+
+function setTextSize(size) {
+document.documentElement.style.setProperty('--current-text-size', size);
+saveSettings('textSize', size);
+}
+
+function setLineHeight(height) {
+document.documentElement.style.setProperty('--current-leading', height);
+saveSettings('lineHeight', height);
+}
+
+function setLetterSpacing(spacing) {
+document.documentElement.style.setProperty('--current-letter-spacing', spacing);
+saveSettings('letterSpacing', spacing);
+}
+
+// Read Aloud functionality
+let speechSynthesis = window.speechSynthesis;
+let utterance = null;
+
+function startReadAloud() {
+stopReadAloud();
+if (!speechSynthesis) {
+speechSynthesis = window.speechSynthesis;
+}
+const mainContent = document.querySelector('main');
+const text = mainContent.textContent || mainContent.innerText;
+utterance = new SpeechSynthesisUtterance(text);
+utterance.rate = 1;
+utterance.pitch = 1;
+utterance.volume = 1;
+speechSynthesis.speak(utterance);
+}
+
+function stopReadAloud() {
+if (speechSynthesis && speechSynthesis.speaking) {
+speechSynthesis.cancel();
+}
+}
+
+// Load saved settings
+function loadSettings() {
+const savedTheme = getSetting('theme');
+if (savedTheme) {
+setTheme(savedTheme);
+const modeButtons = document.querySelectorAll('#mode-options .option-btn');
+modeButtons.forEach(btn => {
+if (btn.dataset.value === savedTheme) {
+btn.classList.add('active');
+}
+});
+} else {
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+setTheme('dark');
+document.querySelector('#mode-options .option-btn[data-value="dark"]').classList.add('active');
+} else {
+setTheme('light');
+document.querySelector('#mode-options .option-btn[data-value="light"]').classList.add('active');
+}
+}
+
+const savedFont = getSetting('font');
+if (savedFont) {
+setFont(savedFont);
+const fontButtons = document.querySelectorAll('#font-options .option-btn');
+fontButtons.forEach(btn => {
+if (btn.dataset.value === savedFont || (savedFont === 'Atkinson Hyperlegible' && btn.textContent === 'Atkinson')) {
+btn.classList.add('active');
+}
+});
+} else {
+setFont('Noto Sans');
+document.querySelector('#font-options .option-btn[data-value="Noto Sans"]').classList.add('active');
+}
+
+const savedTextSize = getSetting('textSize');
+if (savedTextSize) {
+setTextSize(savedTextSize);
+const textSizeButtons = document.querySelectorAll('#text-size-options .option-btn');
+textSizeButtons.forEach(btn => {
+if (btn.dataset.value === savedTextSize) {
+btn.classList.add('active');
+}
+});
+} else {
+setTextSize('var(--text-base)');
+document.querySelector('#text-size-options .option-btn[data-value="var(--text-base)"]').classList.add('active');
+}
+
+const savedLineHeight = getSetting('lineHeight');
+if (savedLineHeight) {
+setLineHeight(savedLineHeight);
+const lineHeightButtons = document.querySelectorAll('#line-height-options .option-btn');
+lineHeightButtons.forEach(btn => {
+if (btn.dataset.value === savedLineHeight) {
+btn.classList.add('active');
+}
+});
+} else {
+setLineHeight('var(--leading-relaxed)');
+document.querySelector('#line-height-options .option-btn[data-value="var(--leading-relaxed)"]').classList.add('active');
+}
+
+const savedLetterSpacing = getSetting('letterSpacing');
+if (savedLetterSpacing) {
+setLetterSpacing(savedLetterSpacing);
+const letterSpacingButtons = document.querySelectorAll('#letter-spacing-options .option-btn');
+letterSpacingButtons.forEach(btn => {
+if (btn.dataset.value === savedLetterSpacing) {
+btn.classList.add('active');
+}
+});
+} else {
+setLetterSpacing('var(--letter-spacing-normal)');
+document.querySelector('#letter-spacing-options .option-btn[data-value="var(--letter-spacing-normal)"]').classList.add('active');
+}
+
+const savedReadAloud = getSetting('readAloud');
+if (savedReadAloud === 'true') {
+document.getElementById('readAloudToggle').checked = true;
+startReadAloud();
+}
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+// Mobile menu functionality
+const mobileMenuButtons = document.querySelectorAll('.mobile-menu-button');
+const mobileMenu = document.querySelector('.mobile-menu');
+const overlay = document.querySelector('.overlay');
+
+mobileMenuButtons.forEach(button => {
+button.addEventListener('click', function() {
+mobileMenu.classList.toggle('active');
+overlay.classList.toggle('active');
+document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+});
+});
+
+overlay.addEventListener('click', function() {
+mobileMenu.classList.remove('active');
+overlay.classList.remove('active');
+document.body.style.overflow = '';
+});
+
+// Modal functionality
+function showModal() {
+document.body.classList.add('modal-open');
+document.getElementById('startModal').style.display = 'flex';
+}
+
+document.getElementById('getStartedBtn').addEventListener('click', function(e) {
+e.preventDefault();
+showModal();
+});
+
+document.getElementById('headerCtaBtn').addEventListener('click', function(e) {
+e.preventDefault();
+showModal();
+});
+
+document.getElementById('mobileCtaBtn').addEventListener('click', function(e) {
+e.preventDefault();
+showModal();
+});
+
+document.getElementById('cancelModalBtn').addEventListener('click', function() {
+document.body.classList.remove('modal-open');
+document.getElementById('startModal').style.display = 'none';
+});
+
+window.addEventListener('click', function(event) {
+if (event.target === document.getElementById('startModal')) {
+document.body.classList.remove('modal-open');
+document.getElementById('startModal').style.display = 'none';
+}
+});
+
+// Accessibility modal
+const accessibilityBtn = document.querySelector('.accessibility-btn');
+const accessibilityModal = document.getElementById('accessibilityModal');
+const closeModal = document.querySelector('.close-modal');
+const readAloudToggle = document.getElementById('readAloudToggle');
+
+accessibilityBtn.addEventListener('click', () => {
+accessibilityModal.style.display = 'flex';
+document.body.classList.add('modal-open');
+});
+closeModal.addEventListener('click', () => {
+accessibilityModal.style.display = 'none';
+document.body.classList.remove('modal-open');
+});
+
+window.addEventListener('click', (e) => {
+if (e.target === accessibilityModal) {
+accessibilityModal.style.display = 'none';
+document.body.classList.remove('modal-open');
+}
+});
+
+// Accessibility options
+const optionHeaders = document.querySelectorAll('.option-header');
+optionHeaders.forEach(header => {
+header.addEventListener('click', function() {
+const optionId = this.id.replace('-header', '-options');
+const optionButtons = document.getElementById(optionId);
+const svg = this.querySelector('svg');
+optionButtons.classList.toggle('active');
+this.classList.toggle('active');
+});
+});
+
+document.querySelectorAll('.option-btn').forEach(btn => {
+btn.addEventListener('click', function() {
+const value = this.dataset.value;
+const groupId = this.closest('.option-group').querySelector('.option-header').id.replace('-header', '');
+const groupButtons = document.querySelectorAll(`#${groupId}-options .option-btn`);
+groupButtons.forEach(b => b.classList.remove('active'));
+this.classList.add('active');
+
+switch(groupId) {
+case 'mode':
+setTheme(value);
+break;
+case 'font':
+setFont(value);
+break;
+case 'text-size':
+setTextSize(value);
+break;
+case 'line-height':
+setLineHeight(value);
+break;
+case 'letter-spacing':
+setLetterSpacing(value);
+break;
+}
+});
+});
+
+readAloudToggle.addEventListener('change', (e) => {
+if (e.target.checked) {
+startReadAloud();
+} else {
+stopReadAloud();
+}
+saveSettings('readAloud', e.target.checked);
+});
+
+// Feedback form functionality
+const ratingOptions = document.querySelectorAll('.rating-option');
+const ratingValue = document.getElementById('ratingValue');
+const feedbackForm = document.getElementById('feedbackForm');
+const submitBtn = document.getElementById('submitBtn');
+const formResponse = document.getElementById('formResponse');
+const feedbackLoadingOverlay = document.getElementById('feedbackLoadingOverlay');
+const feedbackSuccessOverlay = document.getElementById('feedbackSuccessOverlay');
+const feedbackErrorOverlay = document.getElementById('feedbackErrorOverlay');
+const verificationCode = document.getElementById('verificationCode');
+const verificationInput = document.getElementById('verificationInput');
+const verifyBtn = document.getElementById('verifyBtn');
+const refreshCode = document.getElementById('refreshCode');
+const readAloudBtn = document.getElementById('readAloud');
+const verificationStatus = document.getElementById('verificationStatus');
+const feedbackText = document.getElementById('feedbackText');
+const charCount = document.getElementById('charCount');
+const ratingError = document.getElementById('ratingError');
+const feedbackError = document.getElementById('feedbackError');
+
+let currentCode = generateVerificationCode();
+verificationCode.textContent = currentCode;
+
+feedbackText.addEventListener('input', updateCharCount);
+
+ratingOptions.forEach(option => {
+option.addEventListener('click', function() {
+ratingOptions.forEach(opt => opt.classList.remove('selected'));
+this.classList.add('selected');
+ratingValue.value = this.getAttribute('data-rating');
+ratingError.style.display = 'none';
+document.querySelector('.rating-options').classList.remove('error-field');
+});
+});
+
+verifyBtn.addEventListener('click', function() {
+if (verificationInput.value.toLowerCase() === currentCode.toLowerCase()) {
+verificationStatus.textContent = 'Verification successful!';
+verificationStatus.className = 'verification-status success';
+submitBtn.disabled = false;
+showToast('Verification successful!', 'success');
+verificationInput.classList.remove('error-field');
+} else {
+verificationStatus.textContent = 'Incorrect code. Please try again.';
+verificationStatus.className = 'verification-status error';
+submitBtn.disabled = true;
+showToast('Incorrect verification code', 'error');
+verificationInput.classList.add('error-field');
+}
+});
+
+refreshCode.addEventListener('click', function() {
+currentCode = generateVerificationCode();
+verificationCode.textContent = currentCode;
+verificationInput.value = '';
+verificationStatus.textContent = '';
+submitBtn.disabled = true;
+verificationInput.classList.remove('error-field');
+showToast('New verification code generated', 'info');
+});
+
+readAloudBtn.addEventListener('click', function() {
+const utterance = new SpeechSynthesisUtterance(currentCode.split('').join(' '));
+window.speechSynthesis.speak(utterance);
+showToast('Reading verification code aloud', 'info');
+});
+
+feedbackForm.addEventListener('submit', async function(e) {
+e.preventDefault();
+clearErrors();
+
+if (!validateForm()) return;
+
+submitBtn.disabled = true;
+formResponse.textContent = '';
+formResponse.classList.remove('success', 'error');
+feedbackLoadingOverlay.classList.add('active');
+
+try {
+const formData = new FormData(feedbackForm);
+const data = {
+rating: formData.get('rating'),
+feedback: formData.get('feedback'),
+timestamp: new Date().toISOString()
+};
+
+const response = await fetch('https://ffwrl.vercel.app/api/submit-feedback', {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json',
+},
+body: JSON.stringify(data)
+});
+
+if (!response.ok) throw new Error('Failed to submit feedback');
+
+feedbackLoadingOverlay.classList.remove('active');
+feedbackSuccessOverlay.classList.add('active');
+feedbackForm.reset();
+ratingOptions.forEach(opt => opt.classList.remove('selected'));
+ratingValue.value = '';
+currentCode = generateVerificationCode();
+verificationCode.textContent = currentCode;
+verificationInput.value = '';
+verificationStatus.textContent = '';
+submitBtn.disabled = true;
+// Reset character count
+document.getElementById('charCount').textContent = '0';
+document.querySelector('.char-counter').classList.remove('warning');
+} catch (error) {
+console.error('Error:', error);
+feedbackLoadingOverlay.classList.remove('active');
+feedbackErrorOverlay.classList.add('active');
+} finally {
+submitBtn.disabled = false;
+}
+});
+
+function validateForm() {
+let isValid = true;
+
+if (!ratingValue.value) {
+ratingError.style.display = 'block';
+document.querySelector('.rating-options').classList.add('error-field');
+isValid = false;
+}
+
+const feedbackText = document.getElementById('feedbackText').value;
+if (!feedbackText.trim()) {
+feedbackError.style.display = 'block';
+document.getElementById('feedbackText').classList.add('error-field');
+isValid = false;
+} else {
+document.getElementById('feedbackText').classList.remove('error-field');
+}
+
+if (verificationInput.value.toLowerCase() !== currentCode.toLowerCase()) {
+verificationStatus.textContent = 'Please verify the code before submitting';
+verificationStatus.className = 'verification-status error';
+verificationInput.classList.add('error-field');
+isValid = false;
+}
+
+if (!isValid) {
+showToast('Please complete all required fields', 'error');
+}
+
+return isValid;
+}
+
+function clearErrors() {
+document.querySelectorAll('.error-message').forEach(el => {
+el.style.display = 'none';
+});
+verificationStatus.textContent = '';
+document.querySelectorAll('.error-field').forEach(el => {
+el.classList.remove('error-field');
+});
+}
+
+// Load all settings
+loadSettings();
+});
+</script>
+</body>
+</html>
