@@ -1214,7 +1214,7 @@ if (currentSearchTerm) {
 const searchTerm = currentSearchTerm.toLowerCase();
 filteredDocs = filteredDocs.filter(doc => 
 doc.name.toLowerCase().includes(searchTerm) || 
-doc.content.toLowerCase().includes(searchTerm)
+(doc.content && doc.content.toLowerCase().includes(searchTerm))
 );
 }
 
@@ -1532,6 +1532,13 @@ currentPage = 1;
 applyFiltersAndSort();
 };
 
+// Real-time search filtering with debounce
+let searchTimeout;
+searchInput.addEventListener('input', () => {
+clearTimeout(searchTimeout);
+searchTimeout = setTimeout(performSearch, 300);
+});
+
 searchButton.addEventListener('click', performSearch);
 searchInput.addEventListener('keyup', (e) => {
 if (e.key === 'Enter') {
@@ -1839,7 +1846,6 @@ setupPagination();
 setupSearchAndFilters();
 setupAccessibility();
 loadSettings();
-
 
 // Setup new document modal options
 document.getElementById('guest-option').addEventListener('click', () => createNewDocument(true));
