@@ -21,6 +21,8 @@
 :root {
 --primary-color: #2563eb;
 --accent: rgba(255, 224, 178, 1);
+--create-doc-bg: rgba(255, 255, 153, 0.3);
+--create-doc-border: rgba(255, 224, 178, 1);
 --button-bg: #2563eb;
 --button-text: white;
 --text-color: #1f2937;
@@ -120,6 +122,8 @@ color: #f0f0f0;
 --white: #222;
 --color-gray: #555;
 --color-dark-gray: #666;
+--create-doc-bg: rgba(255, 221, 100, 0.1);
+--create-doc-border: rgba(255, 193, 7, 0.4);
 }
 
 body.dark-mode #siteLogo {
@@ -442,7 +446,6 @@ margin-bottom: 3rem;
 }
 
 .doc-card, .create-doc {
-background: var(--color-lighter);
 border-radius: var(--radius-sm);
 padding: 1.5rem;
 margin-top: 1rem;
@@ -452,10 +455,12 @@ text-align: center;
 }
 
 .doc-card {
+background: var(--color-lighter);
 box-shadow: var(--shadow-sm);
 }
 
 .create-doc {
+background: var(--create-doc-bg);
 display: flex;
 flex-direction: column;
 align-items: center;
@@ -465,10 +470,10 @@ position: relative;
 overflow: hidden;
 border: none;
 background-image: 
-repeating-linear-gradient(to right, var(--color-gray), var(--color-gray) 15px, transparent 15px, transparent 30px),
-repeating-linear-gradient(to bottom, var(--color-gray), var(--color-gray) 15px, transparent 15px, transparent 30px),
-repeating-linear-gradient(to left, var(--color-gray), var(--color-gray) 15px, transparent 15px, transparent 30px),
-repeating-linear-gradient(to top, var(--color-gray), var(--color-gray) 15px, transparent 15px, transparent 30px);
+repeating-linear-gradient(to right, var(--create-doc-border), var(--create-doc-border) 15px, transparent 15px, transparent 30px),
+repeating-linear-gradient(to bottom, var(--create-doc-border), var(--create-doc-border) 15px, transparent 15px, transparent 30px),
+repeating-linear-gradient(to left, var(--create-doc-border), var(--create-doc-border) 15px, transparent 15px, transparent 30px),
+repeating-linear-gradient(to top, var(--create-doc-border), var(--create-doc-border) 15px, transparent 15px, transparent 30px);
 background-size: 100% 2px, 2px 100%, 100% 2px, 2px 100%;
 background-position: top left, top right, bottom right, bottom left;
 background-repeat: no-repeat;
@@ -709,7 +714,7 @@ background: var(--white);
 padding: 2rem;
 border-radius: var(--radius-md);
 max-width: 500px;
-width: 90%;
+width: 100%;
 box-shadow: var(--shadow-md);
 max-height: 90vh;
 overflow-y: auto;
@@ -875,6 +880,7 @@ justify-content: space-between;
 width: 100%;
 margin-bottom: 1.5rem;
 }
+
 .modal-buttons {
 display: flex;
 justify-content: flex-end;
