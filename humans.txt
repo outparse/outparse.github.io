@@ -1,0 +1,10 @@
+Developer: Gbemisola Oyeniyi
+Site: https://gbemisolaoyeniyi.com
+Twitter: @oliveajike
+
+Fonts: Google Fonts
+
+Last update: 2025/06/02
+Standards: HTML5, CSS3, JavaScript
+Components: Web Speech API, LocalStorage
+Software: Acode
